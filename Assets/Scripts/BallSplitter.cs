@@ -14,13 +14,11 @@ public class BallSplitter : MonoBehaviour
     {
         _myBitFieldMask = BitVector32.CreateMask(_lastBitFieldMask);
         _lastBitFieldMask = _myBitFieldMask;
-
-        Debug.Log($"myBitFieldMask={_myBitFieldMask}");
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        PlayerBall ball = other.GetComponent<PlayerBall>();
+        var ball = other.GetComponent<PlayerBall>();
         if (!ball) return;
 
         if (!CanCollideWithBall(ball)) return;
@@ -28,18 +26,29 @@ public class BallSplitter : MonoBehaviour
         DoTheSplits(ball);
     }
 
+    /// <summary>
+    /// Clones the <see cref="ball"/> <see cref="mSplitCount"/> times.
+    /// </summary>
+    /// <param name="ball"></param>
     private void DoTheSplits(PlayerBall ball)
     {
         SetCannotCollideWithPlayerBall(ball);
 
-        for (int i = 0; i < mSplitCount; i++)
+        for (var i = 0; i < mSplitCount; i++)
         {
-            GameObject go = GameObject.Instantiate(ball.gameObject);
-            SetCannotCollideWithPlayerBall(go.GetComponent<PlayerBall>());
+            var pos = Random.onUnitSphere;
+
+            var transform1 = ball.transform;
+            pos *= transform1.localScale.x;
+            pos += transform1.position;
+            pos.z = 0;
+            
+            var go = GameObject.Instantiate<PlayerBall>(ball, pos, transform1.rotation);
+            SetCannotCollideWithPlayerBall(go);
         }
     }
 
-    public bool CanCollideWithBall(PlayerBall ball)
+    private bool CanCollideWithBall(PlayerBall ball)
     {
         return (ball.mSplittersUsedBitfield & _myBitFieldMask) == 0;
     }
@@ -47,11 +56,5 @@ public class BallSplitter : MonoBehaviour
     private void SetCannotCollideWithPlayerBall(PlayerBall ball)
     {
         ball.mSplittersUsedBitfield |= _myBitFieldMask;
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 }

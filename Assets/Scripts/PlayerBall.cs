@@ -2,5 +2,5 @@
 
 public class PlayerBall : MonoBehaviour
 {
-    public int mSplittersUsedBitfield;
+    [HideInInspector] public int mSplittersUsedBitfield;
 }
