@@ -23,6 +23,5 @@ public class GameplaySlider : MonoBehaviour
         shiftCamera.transform.rotation = Quaternion.Euler(rot);
 
         Physics.gravity = Vector3.Lerp(minGravityAngle, maxGravityAngle, slider.value);
-        Debug.Log($"value={slider.value} Physics.gravity={Physics.gravity} rot=${rot}");
     }
 }

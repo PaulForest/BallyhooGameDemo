@@ -27,25 +27,29 @@ public class BallSplitter : MonoBehaviour
     }
 
     /// <summary>
-    /// Clones the <see cref="ball"/> <see cref="mSplitCount"/> times.
+    /// Clones the <see cref="originalBall"/> <see cref="mSplitCount"/> times.
     /// </summary>
-    /// <param name="ball"></param>
-    private void DoTheSplits(PlayerBall ball)
+    /// <param name="originalBall"/>
+    private void DoTheSplits(PlayerBall originalBall)
     {
-        SetCannotCollideWithPlayerBall(ball);
+        if (!CanCollideWithBall(originalBall)) return;
+
+        SetCannotCollideWithPlayerBall(originalBall);
 
         for (var i = 0; i < mSplitCount; i++)
         {
             var pos = Random.onUnitSphere;
 
-            var transform1 = ball.transform;
+            var transform1 = originalBall.transform;
             pos *= transform1.localScale.x;
             pos += transform1.position;
             pos.z = 0;
-            
-            var go = GameObject.Instantiate<PlayerBall>(ball, pos, transform1.rotation);
+
+            var go = GameObject.Instantiate<PlayerBall>(originalBall, pos, transform1.rotation);
             SetCannotCollideWithPlayerBall(go);
         }
+
+        GlobalEvents.BallSplitEvent?.Invoke(originalBall, this);
     }
 
     private bool CanCollideWithBall(PlayerBall ball)
