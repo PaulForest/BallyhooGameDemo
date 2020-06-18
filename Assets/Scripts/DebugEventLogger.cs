@@ -11,92 +11,128 @@ public class DebugEventLogger : MonoBehaviour
     [SerializeField] private bool levelLost;
     [SerializeField] private bool ballDestroyed;
     [SerializeField] private bool ballSplit;
+    [SerializeField] private bool lastBallDestroyed;
+    [SerializeField] private bool firstBallInGoal;
 
     private bool _levelStartSubscribed;
     private bool _levelWonSubscribed;
     private bool _levelLostSubscribed;
     private bool _ballDestroyedSubscribed;
     private bool _ballSplitSubscribed;
+    private bool _lastBallDestroyedSubscribed;
+    private bool _firstBallInGoalSubscribed;
 
     private void OnValidate()
     {
         if (levelStart && !_levelStartSubscribed)
         {
-            GlobalEvents.LevelStart.AddListener(LevelStartFunc);
+            GlobalEvents.LevelStart.AddListener(OnLevelStartFunc);
             _levelStartSubscribed = true;
         }
         else if (!levelStart && _levelStartSubscribed)
         {
-            GlobalEvents.LevelStart.RemoveListener(LevelStartFunc);
+            GlobalEvents.LevelStart.RemoveListener(OnLevelStartFunc);
             _levelStartSubscribed = false;
         }
 
         if (levelWon && !_levelWonSubscribed)
         {
-            GlobalEvents.LevelWon.AddListener(LevelWonFunc);
+            GlobalEvents.LevelWon.AddListener(OnLevelWonFunc);
             _levelWonSubscribed = true;
         }
         else if (!levelWon && _levelWonSubscribed)
         {
-            GlobalEvents.LevelWon.RemoveListener(LevelWonFunc);
+            GlobalEvents.LevelWon.RemoveListener(OnLevelWonFunc);
             _levelWonSubscribed = false;
         }
 
         if (levelLost && !_levelLostSubscribed)
         {
-            GlobalEvents.LevelLost.AddListener(LevelLostFunc);
+            GlobalEvents.LevelLost.AddListener(OnLevelLostFunc);
             _levelLostSubscribed = true;
         }
         else if (!levelLost && _levelLostSubscribed)
         {
-            GlobalEvents.LevelLost.RemoveListener(LevelLostFunc);
+            GlobalEvents.LevelLost.RemoveListener(OnLevelLostFunc);
             _levelLostSubscribed = false;
         }
 
         if (ballDestroyed && !_ballDestroyedSubscribed)
         {
-            GlobalEvents.BallDestroyed.AddListener(BallDestroyedFunc);
+            GlobalEvents.BallDestroyed.AddListener(OnBallDestroyedFunc);
             _ballDestroyedSubscribed = true;
         }
         else if (!ballDestroyed && _ballDestroyedSubscribed)
         {
-            GlobalEvents.BallDestroyed.RemoveListener(BallDestroyedFunc);
+            GlobalEvents.BallDestroyed.RemoveListener(OnBallDestroyedFunc);
             _ballDestroyedSubscribed = false;
         }
 
         if (ballSplit && !_ballSplitSubscribed)
         {
-            GlobalEvents.BallSplitEvent.AddListener(BallSplitFunc);
+            GlobalEvents.BallSplitEvent.AddListener(OnBallSplitFunc);
             _ballSplitSubscribed = true;
         }
         else if (!ballSplit && _ballSplitSubscribed)
         {
-            GlobalEvents.BallSplitEvent.RemoveListener(BallSplitFunc);
+            GlobalEvents.BallSplitEvent.RemoveListener(OnBallSplitFunc);
             _ballSplitSubscribed = false;
+        }
+
+        if (lastBallDestroyed && !_lastBallDestroyedSubscribed)
+        {
+            GlobalEvents.LastBallDestroyed.AddListener(OnLastBallDestroyed);
+            _lastBallDestroyedSubscribed = true;
+        }
+        else if (!lastBallDestroyed && _lastBallDestroyedSubscribed)
+        {
+            GlobalEvents.LastBallDestroyed.RemoveListener(OnLastBallDestroyed);
+            _lastBallDestroyedSubscribed = false;
+        }
+
+        if (firstBallInGoal && !_firstBallInGoalSubscribed)
+        {
+            GlobalEvents.FirstBallInGoal.AddListener(OnFirstBallInGoal);
+            _firstBallInGoalSubscribed = true;
+        }
+        else if (!firstBallInGoal && _firstBallInGoalSubscribed)
+        {
+            GlobalEvents.FirstBallInGoal.RemoveListener(OnFirstBallInGoal);
+            _firstBallInGoalSubscribed = false;
         }
     }
 
-    private void LevelStartFunc()
+    private void OnFirstBallInGoal()
+    {
+        Debug.Log("OnFirstBallInGoal()");
+    }
+
+    private void OnLastBallDestroyed()
+    {
+        Debug.Log("OnLastBallDestroyed");
+    }
+
+    private void OnLevelStartFunc()
     {
         Debug.Log("Level Start");
     }
 
-    private void LevelWonFunc()
+    private void OnLevelWonFunc()
     {
         Debug.Log("levelWon");
     }
 
-    private void LevelLostFunc()
+    private void OnLevelLostFunc()
     {
         Debug.Log("levelLost");
     }
 
-    private void BallDestroyedFunc(PlayerBall playerBall)
+    private void OnBallDestroyedFunc(PlayerBall playerBall)
     {
         Debug.Log($"ballDestroyed: playerBall={playerBall} ");
     }
 
-    private void BallSplitFunc(PlayerBall ball, BallSplitter splitter)
+    private void OnBallSplitFunc(PlayerBall ball, BallSplitter splitter)
     {
         Debug.Log($"ballSplitEvent: ball={ball} splitter={splitter}");
     }

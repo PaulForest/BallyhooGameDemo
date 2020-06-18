@@ -6,6 +6,9 @@ public class BallSplitter : MonoBehaviour
     [Header("How many balls will this split into?")] [SerializeField]
     protected int mSplitCount;
 
+    /// <summary>
+    /// Each splitter has exactly one unique bit set.  As long as there are no more that 32 splitters in use, we can
+    /// </summary>
     private int _myBitFieldMask;
 
     private static int _lastBitFieldMask;
