@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
-[RequireComponent(typeof(CollideOnlyOnce))]
+[RequireComponent(typeof(CollideOnlyOncePlayerBall))]
 public class BallSplitter : MonoBehaviour
 {
-    [Header("How many balls will this split into?")]
-    [SerializeField] protected int mSplitCount;
+    [Header("How many balls will this split into?")] [SerializeField]
+    protected int mSplitCount;
 
-    private CollideOnlyOnce _collideOnlyOnce;
+    private CollideOnlyOncePlayerBall _collideOnlyOnce;
 
     private void Start()
     {
-        _collideOnlyOnce = GetComponent<CollideOnlyOnce>();
+        _collideOnlyOnce = GetComponent<CollideOnlyOncePlayerBall>();
         _collideOnlyOnce.onCollisionEvent.AddListener(OnCollisionEvent);
     }
 
@@ -33,7 +33,7 @@ public class BallSplitter : MonoBehaviour
     {
         if (!_collideOnlyOnce.CanCollideWithBall(originalBall)) return;
 
-        _collideOnlyOnce.SetCannotCollideWithPlayerBall(originalBall);
+        _collideOnlyOnce.SetCannotCollideWithT(originalBall);
 
         for (var i = 0; i < mSplitCount; i++)
         {
@@ -46,7 +46,7 @@ public class BallSplitter : MonoBehaviour
 
             var go = GameObject.Instantiate(originalBall.gameObject, pos, transform1.rotation);
             var newBall = go.GetComponent<PlayerBall>();
-            _collideOnlyOnce.SetCannotCollideWithPlayerBall(newBall);
+            _collideOnlyOnce.SetCannotCollideWithT(newBall);
         }
 
         GlobalEvents.BallSplitEvent?.Invoke(originalBall, this);

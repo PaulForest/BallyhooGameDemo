@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class CollideOnlyOnce : MonoBehaviour, ResettableStaticData
+public abstract class CollideOnlyOnce<TOnlyTouchOnce, TUnityEvent> : MonoBehaviour
+    where TOnlyTouchOnce : OnlyTouchOnce
+    where TUnityEvent : UnityEvent<TOnlyTouchOnce>, new()
 {
     /// <summary>
     /// Each splitter has exactly one unique bit set.  As long as there are no more that 32 splitters in use, we can
@@ -11,15 +13,17 @@ public class CollideOnlyOnce : MonoBehaviour, ResettableStaticData
 
     private static int _lastBitFieldMask;
 
-    public readonly UnityPlayerBallEvent onCollisionEvent = new UnityPlayerBallEvent();
+    public TUnityEvent onCollisionEvent = new TUnityEvent();
 
-    public void ResetStaticData()
+    public static void ResetStaticData()
     {
         _lastBitFieldMask = 0;
     }
 
     private void Start()
     {
+        onCollisionEvent = new TUnityEvent();
+
         _myBitFieldMask = BitVector32.CreateMask(_lastBitFieldMask);
         _lastBitFieldMask = _myBitFieldMask;
     }
@@ -31,7 +35,7 @@ public class CollideOnlyOnce : MonoBehaviour, ResettableStaticData
 
     private void OnTriggerEnter(Collider other)
     {
-        var ball = other.GetComponent<PlayerBall>();
+        var ball = other.GetComponent<TOnlyTouchOnce>();
         if (!ball) return;
 
         if (!CanCollideWithBall(ball)) return;
@@ -39,12 +43,12 @@ public class CollideOnlyOnce : MonoBehaviour, ResettableStaticData
         onCollisionEvent?.Invoke(ball);
     }
 
-    public bool CanCollideWithBall(PlayerBall ball)
+    public bool CanCollideWithBall(TOnlyTouchOnce ball)
     {
         return (ball.mSplittersUsedBitfield & _myBitFieldMask) == 0;
     }
 
-    public void SetCannotCollideWithPlayerBall(PlayerBall ball)
+    public void SetCannotCollideWithT(TOnlyTouchOnce ball)
     {
         ball.mSplittersUsedBitfield |= _myBitFieldMask;
     }

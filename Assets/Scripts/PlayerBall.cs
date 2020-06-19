@@ -1,16 +1,7 @@
-﻿using System;
-using UnityEngine;
-
-public class PlayerBall : MonoBehaviour
+﻿public class PlayerBall : OnlyTouchOnce
 {
-    /// <summary>
-    /// This is a bitfield of all the splitters this ball has made contact with
-    /// </summary>
-    [HideInInspector] public int mSplittersUsedBitfield;
-
     private void Awake()
     {
-        mSplittersUsedBitfield = 0;
         NumberOfNumberOfBallsInPlay++;
     }
 
