@@ -4,6 +4,8 @@ namespace Level
 {
     public class LevelController : MonoBehaviour
     {
+        private bool _isPlayerWinning = false;
+
         private void Start()
         {
             GlobalEvents.LastBallDestroyed.AddListener(OnLastBallDestroyed);
@@ -18,10 +20,19 @@ namespace Level
 
         private void OnFirstBallInGoal()
         {
+            _isPlayerWinning = true;
         }
 
         private void OnLastBallDestroyed()
         {
+            if (_isPlayerWinning)
+            {
+                GlobalEvents.LevelWon?.Invoke();
+            }
+            else
+            {
+                GlobalEvents.LevelLost?.Invoke();
+            }
         }
     }
 }
