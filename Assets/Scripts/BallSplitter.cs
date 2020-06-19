@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
 using UnityEngine;
 
-public class BallSplitter : MonoBehaviour
+public class BallSplitter : MonoBehaviour, ResettableStaticData
 {
     [Header("How many balls will this split into?")] [SerializeField]
     protected int mSplitCount;
@@ -10,6 +10,11 @@ public class BallSplitter : MonoBehaviour
     /// Each splitter has exactly one unique bit set.  As long as there are no more that 32 splitters in use, we can
     /// </summary>
     private int _myBitFieldMask;
+
+    public void ResetStaticData()
+    {
+        _lastBitFieldMask = 0;
+    }
 
     private static int _lastBitFieldMask;
 
@@ -48,8 +53,9 @@ public class BallSplitter : MonoBehaviour
             pos += transform1.position;
             pos.z = 0;
 
-            var go = GameObject.Instantiate<PlayerBall>(originalBall, pos, transform1.rotation);
-            SetCannotCollideWithPlayerBall(go);
+            var go = GameObject.Instantiate(originalBall.gameObject, pos, transform1.rotation);
+            var newBall = go.GetComponent<PlayerBall>();
+            SetCannotCollideWithPlayerBall(newBall);
         }
 
         GlobalEvents.BallSplitEvent?.Invoke(originalBall, this);

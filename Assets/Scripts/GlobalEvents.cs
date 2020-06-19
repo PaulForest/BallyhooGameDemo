@@ -9,6 +9,7 @@ public static class GlobalEvents
     public static readonly UnityEvent LastBallDestroyed = new UnityEvent();
     public static readonly UnityPlayerBallPlayerSplitterEvent BallSplitEvent = new UnityPlayerBallPlayerSplitterEvent();
     public static readonly UnityEvent FirstBallInGoal = new UnityEvent();
+    public static readonly UnityLockedAreaEvent LockedAreaUnlocked = new UnityLockedAreaEvent();
 }
 
 public class UnityPlayerBallEvent : UnityEvent<PlayerBall>
@@ -16,5 +17,9 @@ public class UnityPlayerBallEvent : UnityEvent<PlayerBall>
 }
 
 public class UnityPlayerBallPlayerSplitterEvent : UnityEvent<PlayerBall, BallSplitter>
+{
+}
+
+public class UnityLockedAreaEvent : UnityEvent<LockedArea>
 {
 }

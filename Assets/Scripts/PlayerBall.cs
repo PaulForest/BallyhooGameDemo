@@ -8,7 +8,7 @@ public class PlayerBall : MonoBehaviour
     /// </summary>
     [HideInInspector] public int mSplittersUsedBitfield;
 
-    private void Start()
+    private void Awake()
     {
         mSplittersUsedBitfield = 0;
         NumberOfNumberOfBallsInPlay++;

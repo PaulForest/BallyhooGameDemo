@@ -13,6 +13,7 @@ public class DebugEventLogger : MonoBehaviour
     [SerializeField] private bool ballSplit;
     [SerializeField] private bool lastBallDestroyed;
     [SerializeField] private bool firstBallInGoal;
+    [SerializeField] private bool lockedAreaUnlocked;
 
     private bool _levelStartSubscribed;
     private bool _levelWonSubscribed;
@@ -21,6 +22,7 @@ public class DebugEventLogger : MonoBehaviour
     private bool _ballSplitSubscribed;
     private bool _lastBallDestroyedSubscribed;
     private bool _firstBallInGoalSubscribed;
+    private bool _lockedAreaUnlockedSubscribed;
 
     private void OnValidate()
     {
@@ -100,6 +102,22 @@ public class DebugEventLogger : MonoBehaviour
             GlobalEvents.FirstBallInGoal.RemoveListener(OnFirstBallInGoal);
             _firstBallInGoalSubscribed = false;
         }
+
+        if (lockedAreaUnlocked && !_lockedAreaUnlockedSubscribed)
+        {
+            GlobalEvents.LockedAreaUnlocked.AddListener(OnLockedAreaUnlocked);
+            _lockedAreaUnlockedSubscribed = true;
+        }
+        else if (!lockedAreaUnlocked && _lockedAreaUnlockedSubscribed)
+        {
+            GlobalEvents.LockedAreaUnlocked.RemoveListener(OnLockedAreaUnlocked);
+            _lockedAreaUnlockedSubscribed = false;
+        }
+    }
+
+    private void OnLockedAreaUnlocked(LockedArea lockedArea)
+    {
+        Debug.Log($"OnLockedAreaUnlocked: lockedArea={lockedArea}");
     }
 
     private void OnFirstBallInGoal()
