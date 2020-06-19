@@ -121,42 +121,42 @@ namespace Util
 
         private void OnLockedAreaUnlocked(LockedArea lockedArea)
         {
-            Debug.Log($"OnLockedAreaUnlocked: lockedArea={lockedArea}");
+            Debug.Log($"{typeof(DebugEventLogger)}.OnLockedAreaUnlocked: lockedArea={lockedArea}");
         }
 
         private void OnFirstBallInGoal()
         {
-            Debug.Log("OnFirstBallInGoal()");
+            Debug.Log($"{typeof(DebugEventLogger)}.OnFirstBallInGoal()");
         }
 
         private void OnLastBallDestroyed()
         {
-            Debug.Log("OnLastBallDestroyed");
+            Debug.Log($"{typeof(DebugEventLogger)}.OnLastBallDestroyed");
         }
 
         private void OnLevelStartFunc()
         {
-            Debug.Log("Level Start");
+            Debug.Log($"{typeof(DebugEventLogger)}.Level Start");
         }
 
         private void OnLevelWonFunc()
         {
-            Debug.Log("levelWon");
+            Debug.Log($"{typeof(DebugEventLogger)}.levelWon");
         }
 
         private void OnLevelLostFunc()
         {
-            Debug.Log("levelLost");
+            Debug.Log($"{typeof(DebugEventLogger)}.levelLost");
         }
 
         private void OnBallDestroyedFunc(PlayerBall playerBall)
         {
-            Debug.Log($"ballDestroyed: playerBall={playerBall} ");
+            Debug.Log($"{typeof(DebugEventLogger)}.ballDestroyed: playerBall={playerBall} ");
         }
 
         private void OnBallSplitFunc(PlayerBall ball, BallSplitter splitter)
         {
-            Debug.Log($"ballSplitEvent: ball={ball} splitter={splitter}");
+            Debug.Log($"{typeof(DebugEventLogger)}.ballSplitEvent: ball={ball} splitter={splitter}");
         }
 #endif
     }

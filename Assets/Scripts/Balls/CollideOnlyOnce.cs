@@ -41,8 +41,6 @@ namespace Balls
 
         private void Start()
         {
-            onCollisionEvent = new TUnityEvent();
-
             _myBitFieldMask = BitVector32.CreateMask(_lastBitFieldMask);
             _lastBitFieldMask = _myBitFieldMask;
         }

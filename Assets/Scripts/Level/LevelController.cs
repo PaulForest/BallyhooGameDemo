@@ -9,7 +9,7 @@ namespace Level
 
         private void Start()
         {
-            ResetAllStaticData.Reset();
+            // ResetAllStaticData.Reset();
 
             GlobalEvents.LastBallDestroyed.AddListener(OnLastBallDestroyed);
             GlobalEvents.FirstBallInGoal.AddListener(OnFirstBallInGoal);
