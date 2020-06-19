@@ -1,36 +1,27 @@
-﻿using System.Collections.Specialized;
-using UnityEngine;
+﻿using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class BallSplitter : MonoBehaviour, ResettableStaticData
+[RequireComponent(typeof(CollideOnlyOnce))]
+public class BallSplitter : MonoBehaviour
 {
-    [Header("How many balls will this split into?")] [SerializeField]
-    protected int mSplitCount;
+    [Header("How many balls will this split into?")]
+    [SerializeField] protected int mSplitCount;
 
-    /// <summary>
-    /// Each splitter has exactly one unique bit set.  As long as there are no more that 32 splitters in use, we can
-    /// </summary>
-    private int _myBitFieldMask;
-
-    public void ResetStaticData()
-    {
-        _lastBitFieldMask = 0;
-    }
-
-    private static int _lastBitFieldMask;
+    private CollideOnlyOnce _collideOnlyOnce;
 
     private void Start()
     {
-        _myBitFieldMask = BitVector32.CreateMask(_lastBitFieldMask);
-        _lastBitFieldMask = _myBitFieldMask;
+        _collideOnlyOnce = GetComponent<CollideOnlyOnce>();
+        _collideOnlyOnce.onCollisionEvent.AddListener(OnCollisionEvent);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnDestroy()
     {
-        var ball = other.GetComponent<PlayerBall>();
-        if (!ball) return;
+        _collideOnlyOnce.onCollisionEvent.RemoveListener(OnCollisionEvent);
+    }
 
-        if (!CanCollideWithBall(ball)) return;
-
+    private void OnCollisionEvent(PlayerBall ball)
+    {
         DoTheSplits(ball);
     }
 
@@ -40,9 +31,9 @@ public class BallSplitter : MonoBehaviour, ResettableStaticData
     /// <param name="originalBall"/>
     private void DoTheSplits(PlayerBall originalBall)
     {
-        if (!CanCollideWithBall(originalBall)) return;
+        if (!_collideOnlyOnce.CanCollideWithBall(originalBall)) return;
 
-        SetCannotCollideWithPlayerBall(originalBall);
+        _collideOnlyOnce.SetCannotCollideWithPlayerBall(originalBall);
 
         for (var i = 0; i < mSplitCount; i++)
         {
@@ -55,19 +46,9 @@ public class BallSplitter : MonoBehaviour, ResettableStaticData
 
             var go = GameObject.Instantiate(originalBall.gameObject, pos, transform1.rotation);
             var newBall = go.GetComponent<PlayerBall>();
-            SetCannotCollideWithPlayerBall(newBall);
+            _collideOnlyOnce.SetCannotCollideWithPlayerBall(newBall);
         }
 
         GlobalEvents.BallSplitEvent?.Invoke(originalBall, this);
-    }
-
-    private bool CanCollideWithBall(PlayerBall ball)
-    {
-        return (ball.mSplittersUsedBitfield & _myBitFieldMask) == 0;
-    }
-
-    private void SetCannotCollideWithPlayerBall(PlayerBall ball)
-    {
-        ball.mSplittersUsedBitfield |= _myBitFieldMask;
     }
 }

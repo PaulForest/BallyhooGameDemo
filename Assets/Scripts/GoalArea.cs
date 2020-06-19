@@ -1,24 +1,25 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(CollideOnlyOnce))]
 public class GoalArea : MonoBehaviour
 {
     public static int NumberOfBallsInGoal { get; private set; }
-
     public static bool HasBallsInGoal() => NumberOfBallsInGoal > 0;
+
+    private CollideOnlyOnce _collideOnlyOnce;
 
     private void Start()
     {
         NumberOfBallsInGoal = 0;
+        _collideOnlyOnce = GetComponent<CollideOnlyOnce>();
+        _collideOnlyOnce.onCollisionEvent.AddListener(OnCollideWithBall);
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnCollideWithBall(PlayerBall ball)
     {
-        var ball = other.collider.GetComponent<PlayerBall>();
         if (!ball) return;
 
         NumberOfBallsInGoal++;
-        Destroy(ball.gameObject);
 
         if (NumberOfBallsInGoal == 1)
         {
