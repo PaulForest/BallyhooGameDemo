@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using Util;
+﻿using System;
+using UnityEngine;
 
 namespace Level
 {
@@ -7,12 +7,22 @@ namespace Level
     {
         private bool _isPlayerWinning = false;
 
+
+
         private void Start()
         {
             // ResetAllStaticData.Reset();
 
             GlobalEvents.LastBallDestroyed.AddListener(OnLastBallDestroyed);
             GlobalEvents.FirstBallInGoal.AddListener(OnFirstBallInGoal);
+        }
+
+        /// <summary>
+        /// Stops everything related to gameplay for this level
+        /// </summary>
+        public void HaltExecution()
+        {
+            throw new NotImplementedException();
         }
 
         private void OnDestroy()

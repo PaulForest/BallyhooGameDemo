@@ -1,13 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using Level;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Util;
 
+[RequireComponent((typeof(DontDestroyOnLoad)))]
 public class GameController : MonoBehaviour
 {
-    private readonly Dictionary<string, Scene> _gameLevels = new Dictionary<string, Scene>();
     public Player Player { get; private set; }
 
     public static GameController Instance => _instance;
+    private static GameController _instance;
+
+    private LevelController _levelController;
+
+    public void StartPlaying()
+    {
+
+    }
 
     private void Awake()
     {
@@ -18,27 +28,37 @@ public class GameController : MonoBehaviour
         }
 
         _instance = this;
-
-        var max = SceneManager.sceneCountInBuildSettings;
-        for (var i = 0; i < max; i++)
-        {
-            var scene = SceneManager.GetSceneByBuildIndex(i);
-            if (scene.name.ToLower().Contains("level") || scene.path.ToLower().Contains("level"))
-            {
-                _instance._gameLevels.Add(scene.name, scene);
-                Debug.Log($"{scene.path}");
-            }
-        }
     }
-
-    private static GameController _instance;
 
     private void Start()
     {
         Player = Player.Instance;
         if (string.IsNullOrEmpty(Player.LastLevelPlayed))
         {
-            // Player.LastLevelPlayed = _gameLevels.;
+            Player.LastLevelPlayed = LevelList.Instance.GetFirstLevelName();
         }
+
+        GlobalEvents.LevelWon.AddListener(OnLevelWon);
+        GlobalEvents.LevelLost.AddListener(OnLevelLost);
+    }
+
+    private void OnLevelWon()
+    {
+        Debug.Log("GameController.OnLevelWon");
+        StartCoroutine(OnLevelWonCoroutine());
+    }
+
+    private IEnumerator OnLevelWonCoroutine()
+    {
+        var oldLevelName = Player.LastLevelPlayed;
+        var newLevelName = LevelList.Instance.GetNextLevelName(Player.LastLevelPlayed);
+
+        yield return SceneManager.UnloadSceneAsync(oldLevelName);
+        yield return SceneManager.LoadSceneAsync(newLevelName);
+    }
+
+    private void OnLevelLost()
+    {
+        Debug.Log("GameController.OnLevelLost()");
     }
 }
