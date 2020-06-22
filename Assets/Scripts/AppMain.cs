@@ -7,10 +7,10 @@ public class AppMain : MonoBehaviour
 {
     private void Start()
     {
-        StartGame();
+        // StartGame();
     }
 
-    private void StartGame()
+    public void StartGame()
     {
         SceneManager.LoadScene("GameplayScene");
     }
