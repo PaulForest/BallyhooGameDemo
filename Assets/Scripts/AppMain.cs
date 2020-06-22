@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using Util;
 
@@ -8,13 +7,11 @@ public class AppMain : MonoBehaviour
 {
     private void Start()
     {
-        StartCoroutine(StartGame());
+        StartGame();
     }
 
-    private IEnumerator StartGame()
+    private void StartGame()
     {
-        yield return SceneManager.LoadSceneAsync("GameplayScene");
-
-        GameController.Instance.StartPlaying();
+        SceneManager.LoadScene("GameplayScene");
     }
 }

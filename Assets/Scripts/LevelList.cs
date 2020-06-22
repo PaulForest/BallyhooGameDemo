@@ -4,21 +4,26 @@ using UnityEngine.SceneManagement;
 
 public class LevelList
 {
-    private readonly List<string> _gameLevels = new List<string>();
+    private readonly List<int> _gameLevels = new List<int>();
     public static LevelList Instance => _instance ?? (_instance = new LevelList());
-    private static List<string>.Enumerator _gameLevelEnumerator;
     private static LevelList _instance;
+
+    private static List<int>.Enumerator _gameLevelEnumerator;
+
+    /// <summary>
+    /// Dumb workaround to make sure that we keep track of which scenes are levels.
+    /// </summary>
+    private const int NumberOfScenesThatAreNotGameLevels = 2;
 
     private LevelList()
     {
         var max = SceneManager.sceneCountInBuildSettings;
-        for (var i = 0; i < max; i++)
+        for (var i = NumberOfScenesThatAreNotGameLevels; i < max; i++)
         {
             var scene = SceneManager.GetSceneByBuildIndex(i);
-            if (!scene.name.ToLower().Contains("level") && !scene.path.ToLower().Contains("level")) continue;
 
-            _instance._gameLevels.Add(scene.name);
-            Debug.Log($"{scene.path}");
+            _gameLevels.Add(i);
+            Debug.Log($"Adding a level with build index: {i}");
         }
 
         if (_gameLevels.Count == 0)
@@ -32,19 +37,21 @@ public class LevelList
         _gameLevelEnumerator = _gameLevels.GetEnumerator();
     }
 
-    public string GetFirstLevelName()
+    public int GetFirstLevelBuildIndex()
     {
-        return _gameLevels[0];
+        _gameLevelEnumerator = _gameLevels.GetEnumerator();
+        _gameLevelEnumerator.MoveNext();
+
+        return _gameLevelEnumerator.Current;
     }
 
-    public string GetNextLevelName(string currentLevelName)
+    public int GetNextLevelBuildIndex(int currentLevelBuildIndex)
     {
-        var index = _gameLevels.IndexOf(currentLevelName);
-        if (index == _gameLevels.Count - 1)
+        if (_gameLevelEnumerator.MoveNext())
         {
-            index = 0;
+            return _gameLevelEnumerator.Current;
         }
 
-        return _gameLevels[index];
+        return GetFirstLevelBuildIndex();
     }
 }

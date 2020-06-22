@@ -25,6 +25,7 @@ namespace UI
         {
             if (!shiftCamera) shiftCamera = Camera.main;
             if (!shiftCamera) shiftCamera = Camera.current;
+            if (!shiftCamera) shiftCamera = FindObjectOfType<Camera>();
             if (!shiftCamera) Debug.LogError("I need my camera set please");
 
             _screenWidth = Screen.width / 2;

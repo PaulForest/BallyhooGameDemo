@@ -7,39 +7,56 @@ using Util;
 [RequireComponent((typeof(DontDestroyOnLoad)))]
 public class GameController : MonoBehaviour
 {
-    public Player Player { get; private set; }
-
-    public static GameController Instance => _instance;
-    private static GameController _instance;
-
-    private LevelController _levelController;
-
-    public void StartPlaying()
+    public static GameController Instance
     {
+        get
+        {
+            if (_instance) return _instance;
 
+
+            Debug.LogError($"GameController should be in the scene");
+            return null;
+
+            // var go = new GameObject("GameController");
+            // _instance = go.AddComponent<GameController>();
+            // return _instance;
+        }
     }
+
+    private static GameController _instance;
 
     private void Awake()
     {
-        if (_instance)
+        if (_instance && _instance != this)
         {
             DestroyImmediate(gameObject);
             return;
         }
 
         _instance = this;
+        ResetAllStaticData.Reset();
     }
 
     private void Start()
     {
-        Player = Player.Instance;
-        if (string.IsNullOrEmpty(Player.LastLevelPlayed))
-        {
-            Player.LastLevelPlayed = LevelList.Instance.GetFirstLevelName();
-        }
+        StartLevel(Player.Instance.LastLevelPlayed);
 
         GlobalEvents.LevelWon.AddListener(OnLevelWon);
         GlobalEvents.LevelLost.AddListener(OnLevelLost);
+    }
+
+    private void StartLevel(int levelBuildIndex)
+    {
+        Debug.Log($"GameController.StartLevel(): levelBuildIndex={levelBuildIndex}");
+        SceneManager.LoadScene(levelBuildIndex, LoadSceneMode.Additive);
+
+        ResetAllStaticData.Reset();
+
+        var player = Player.Instance;
+
+        LevelController.ResetInstance();
+
+        GlobalEvents.LevelStart?.Invoke();
     }
 
     private void OnLevelWon()
@@ -50,15 +67,32 @@ public class GameController : MonoBehaviour
 
     private IEnumerator OnLevelWonCoroutine()
     {
-        var oldLevelName = Player.LastLevelPlayed;
-        var newLevelName = LevelList.Instance.GetNextLevelName(Player.LastLevelPlayed);
+        ResetAllStaticData.Reset();
+        LevelController.Instance.HaltExecution();
 
-        yield return SceneManager.UnloadSceneAsync(oldLevelName);
-        yield return SceneManager.LoadSceneAsync(newLevelName);
+        var player = Player.Instance;
+
+        yield return SceneManager.UnloadSceneAsync(player.LastLevelPlayed);
+
+        player.LastLevelPlayed = LevelList.Instance.GetNextLevelBuildIndex(player.LastLevelPlayed);
+        player.SaveData();
+
+        StartLevel(player.LastLevelPlayed);
     }
 
     private void OnLevelLost()
     {
         Debug.Log("GameController.OnLevelLost()");
+        StartCoroutine(OnLevelLostCoroutine());
+    }
+
+    private IEnumerator OnLevelLostCoroutine()
+    {
+        yield return null;
+
+        ResetAllStaticData.Reset();
+        LevelController.Instance.HaltExecution();
+
+        StartLevel(Player.Instance.LastLevelPlayed);
     }
 }

@@ -4,26 +4,21 @@ public class Player
 {
     private const string LastLevelKey = "LastLevelPlayed";
 
-    public static Player Instance
-    {
-        get => Instance ?? (Instance = new Player());
-        private set => Instance = value;
-    }
+    public static Player Instance => _instance ?? (_instance = new Player());
+    private static Player _instance;
 
-    public string LastLevelPlayed { get; set; }
+    public int LastLevelPlayed { get; set; }
 
     private Player()
     {
-        if (PlayerPrefs.HasKey(LastLevelKey))
-        {
-            // Get all data from player prefs
-            LastLevelPlayed = PlayerPrefs.GetString(LastLevelKey);
-        }
+        LastLevelPlayed = PlayerPrefs.HasKey(LastLevelKey)
+            ? PlayerPrefs.GetInt(LastLevelKey)
+            : LevelList.Instance.GetFirstLevelBuildIndex();
     }
 
     public void SaveData()
     {
-        PlayerPrefs.SetString(LastLevelKey, LastLevelPlayed);
+        PlayerPrefs.SetInt(LastLevelKey, LastLevelPlayed);
         PlayerPrefs.Save();
     }
 }

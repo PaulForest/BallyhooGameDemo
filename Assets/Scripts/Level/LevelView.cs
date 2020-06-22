@@ -26,12 +26,12 @@ namespace Level
 
         private void LevelWon()
         {
-            throw new NotImplementedException();
+//            throw new NotImplementedException();
         }
 
         private void LevelStart()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
     }
 }
