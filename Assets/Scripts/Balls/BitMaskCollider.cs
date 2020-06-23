@@ -6,8 +6,6 @@ namespace Balls
     {
         public static void ResetStaticData()
         {
-            Debug.Log($"ResetStaticData(): old value was: {lastBitFieldMask}");
-
             lastBitFieldMask = 0;
         }
 

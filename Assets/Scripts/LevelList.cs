@@ -20,10 +20,7 @@ public class LevelList
         var max = SceneManager.sceneCountInBuildSettings;
         for (var i = NumberOfScenesThatAreNotGameLevels; i < max; i++)
         {
-            var scene = SceneManager.GetSceneByBuildIndex(i);
-
             _gameLevels.Add(i);
-            Debug.Log($"Adding a level with build index: {i}");
         }
 
         if (_gameLevels.Count == 0)

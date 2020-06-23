@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Util;
 
 namespace UI
 {
@@ -21,10 +23,21 @@ namespace UI
         [HideInInspector] private float _currentValue = 0.5f;
         [HideInInspector] private int _screenWidth;
 
+        private void Awake()
+        {
+            GlobalEvents.CameraChanged.AddListener(OnCameraChanged);
+        }
+
+        private void OnCameraChanged(Camera arg0)
+        {
+            shiftCamera = arg0;
+        }
+
         private void Start()
         {
             if (!shiftCamera) shiftCamera = Camera.main;
             if (!shiftCamera) shiftCamera = Camera.current;
+            if (!shiftCamera) shiftCamera = CameraPreference.GetPreferredOption;
             if (!shiftCamera) shiftCamera = FindObjectOfType<Camera>();
             if (!shiftCamera) Debug.LogError("I need my camera set please");
 
@@ -38,6 +51,8 @@ namespace UI
             var touch = Input.GetTouch(0);
             if (touch.phase != TouchPhase.Moved) return;
 
+            if (!shiftCamera) return;
+
             _currentValue += touch.deltaPosition.x / _screenWidth;
             _currentValue = Mathf.Clamp01(_currentValue);
 
@@ -45,6 +60,11 @@ namespace UI
             shiftCamera.transform.rotation = Quaternion.Euler(rot);
 
             Physics.gravity = Vector3.Lerp(minGravityAngle, maxGravityAngle, _currentValue);
+        }
+
+        private void OnDestroy()
+        {
+            GlobalEvents.CameraChanged.RemoveListener(OnCameraChanged);
         }
     }
 }

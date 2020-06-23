@@ -47,7 +47,6 @@ public class GameController : MonoBehaviour
 
     private void StartLevel(int levelBuildIndex)
     {
-        Debug.Log($"GameController.StartLevel(): levelBuildIndex={levelBuildIndex}");
         SceneManager.LoadScene(levelBuildIndex, LoadSceneMode.Additive);
 
         ResetAllStaticData.Reset();
@@ -61,7 +60,6 @@ public class GameController : MonoBehaviour
 
     private void OnLevelWon()
     {
-        Debug.Log("GameController.OnLevelWon");
         StartCoroutine(OnLevelWonCoroutine());
     }
 
