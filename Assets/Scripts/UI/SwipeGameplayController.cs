@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Util;
 
 namespace UI
@@ -22,6 +21,9 @@ namespace UI
 
         [HideInInspector] private float _currentValue = 0.5f;
         [HideInInspector] private int _screenWidth;
+
+        [HideInInspector] private float _dx;
+        [HideInInspector] private float _dy;
 
         private void Awake()
         {
@@ -46,14 +48,14 @@ namespace UI
 
         public void Update()
         {
-            if (Input.touchCount <= 0) return;
-
-            var touch = Input.GetTouch(0);
-            if (touch.phase != TouchPhase.Moved) return;
-
             if (!shiftCamera) return;
 
-            _currentValue += touch.deltaPosition.x / _screenWidth;
+            _dx = 0;
+            _dy = 0;
+
+            PlatformNeutralInput.GetDeltaXDeltaY(ref _dx, ref _dy);
+
+            _currentValue += _dx / _screenWidth;
             _currentValue = Mathf.Clamp01(_currentValue);
 
             var rot = Vector3.Lerp(minCameraAngle, maxCameraAngle, _currentValue);

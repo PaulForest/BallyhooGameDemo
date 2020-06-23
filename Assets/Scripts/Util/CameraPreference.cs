@@ -27,8 +27,9 @@ namespace Util
 
         private Camera MyCamera { get; set; }
 
-        public static Camera GetPreferredOption =>
-            _preferredChoice && _preferredChoice.MyCamera ? _preferredChoice.MyCamera : null;
+        public static Camera GetPreferredOption => _preferredChoice && _preferredChoice.MyCamera
+            ? _preferredChoice.MyCamera
+            : null;
 
         public static CameraPreference PreferredChoice => _preferredChoice;
         private static CameraPreference _preferredChoice;
