@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -25,24 +26,25 @@ namespace Balls
         where TOnlyTouchOnce : OnlyTouchOnce
         where TUnityEvent : UnityEvent<TOnlyTouchOnce>, new()
     {
-        /// <summary>
-        /// Each splitter has exactly one unique bit set.  As long as there are no more that 32 splitters in use, we can
-        /// </summary>
-        private int _myBitFieldMask;
-
-        private static int _lastBitFieldMask;
-
         public TUnityEvent onCollisionEvent = new TUnityEvent();
 
-        public static void ResetStaticData()
-        {
-            _lastBitFieldMask = 0;
-        }
+        private int _myBitFieldMask;
 
         private void Start()
         {
-            _myBitFieldMask = BitVector32.CreateMask(_lastBitFieldMask);
-            _lastBitFieldMask = _myBitFieldMask;
+            try
+            {
+                _myBitFieldMask = BitVector32.CreateMask(BitMaskCollider.lastBitFieldMask);
+            }
+            catch (InvalidOperationException e)
+            {
+                Debug.LogError(
+                    $"{this}.Start(): cannot use this bitmask: BitMaskCollider.lastBitFieldMask={BitMaskCollider.lastBitFieldMask}");
+                BitMaskCollider.lastBitFieldMask = 0;
+                _myBitFieldMask = BitVector32.CreateMask(BitMaskCollider.lastBitFieldMask);
+            }
+
+            BitMaskCollider.lastBitFieldMask = _myBitFieldMask;
         }
 
         private void OnCollisionEnter(Collision other)

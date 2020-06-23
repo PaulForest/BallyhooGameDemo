@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Level
 {
@@ -21,17 +20,17 @@ namespace Level
 
         private void LevelLost()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         private void LevelWon()
         {
-            throw new NotImplementedException();
+//            throw new NotImplementedException();
         }
 
         private void LevelStart()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
     }
 }

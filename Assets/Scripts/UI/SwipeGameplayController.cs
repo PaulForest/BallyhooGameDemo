@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Util;
 
 namespace UI
 {
@@ -21,10 +22,25 @@ namespace UI
         [HideInInspector] private float _currentValue = 0.5f;
         [HideInInspector] private int _screenWidth;
 
+        [HideInInspector] private float _dx;
+        [HideInInspector] private float _dy;
+
+        private void Awake()
+        {
+            GlobalEvents.CameraChanged.AddListener(OnCameraChanged);
+        }
+
+        private void OnCameraChanged(Camera arg0)
+        {
+            shiftCamera = arg0;
+        }
+
         private void Start()
         {
             if (!shiftCamera) shiftCamera = Camera.main;
             if (!shiftCamera) shiftCamera = Camera.current;
+            if (!shiftCamera) shiftCamera = CameraPreference.GetPreferredOption;
+            if (!shiftCamera) shiftCamera = FindObjectOfType<Camera>();
             if (!shiftCamera) Debug.LogError("I need my camera set please");
 
             _screenWidth = Screen.width / 2;
@@ -32,18 +48,25 @@ namespace UI
 
         public void Update()
         {
-            if (Input.touchCount <= 0) return;
+            if (!shiftCamera) return;
 
-            var touch = Input.GetTouch(0);
-            if (touch.phase != TouchPhase.Moved) return;
+            _dx = 0;
+            _dy = 0;
 
-            _currentValue += touch.deltaPosition.x / _screenWidth;
+            PlatformNeutralInput.GetDeltaXDeltaY(ref _dx, ref _dy);
+
+            _currentValue += _dx / _screenWidth;
             _currentValue = Mathf.Clamp01(_currentValue);
 
             var rot = Vector3.Lerp(minCameraAngle, maxCameraAngle, _currentValue);
             shiftCamera.transform.rotation = Quaternion.Euler(rot);
 
             Physics.gravity = Vector3.Lerp(minGravityAngle, maxGravityAngle, _currentValue);
+        }
+
+        private void OnDestroy()
+        {
+            GlobalEvents.CameraChanged.RemoveListener(OnCameraChanged);
         }
     }
 }

@@ -2,14 +2,14 @@
 
 namespace Util
 {
-    public class ResetAllStaticData
+    public static class ResetAllStaticData
     {
         /// <summary>
         /// Reset anything that has static data
         /// </summary>
         public static void Reset()
         {
-            CollideOnlyOncePlayerBall.ResetStaticData();
+            BitMaskCollider.ResetStaticData();
         }
 
         // private static Type[] _implementationsOfIResettableStaticData;
