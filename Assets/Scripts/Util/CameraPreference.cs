@@ -39,11 +39,6 @@ namespace Util
             if (!MyCamera) MyCamera = GetComponentInChildren<Camera>();
             if (!MyCamera) MyCamera = GetComponentInParent<Camera>();
 
-            var a = GetComponent<Camera>();
-            var b = GetComponentInChildren<Camera>();
-            var c = GetComponentInParent<Camera>();
-
-
             if (MyCamera) return;
 
             Debug.LogError(
