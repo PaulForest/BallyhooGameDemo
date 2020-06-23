@@ -39,17 +39,23 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        StartLevel(Player.Instance.LastLevelPlayed);
-
         GlobalEvents.LevelWon.AddListener(OnLevelWon);
         GlobalEvents.LevelLost.AddListener(OnLevelLost);
+
+        StartLevel(Player.Instance.LastLevelPlayed);
     }
 
     private void StartLevel(int levelBuildIndex)
     {
-        SceneManager.LoadScene(levelBuildIndex, LoadSceneMode.Additive);
+        StartCoroutine(StartLevelCoroutine(levelBuildIndex));
+    }
 
+    private IEnumerator StartLevelCoroutine(int levelBuildIndex)
+    {
         ResetAllStaticData.Reset();
+
+
+        yield return SceneManager.LoadSceneAsync(levelBuildIndex, LoadSceneMode.Additive);
 
         var player = Player.Instance;
 
@@ -86,10 +92,13 @@ public class GameController : MonoBehaviour
 
     private IEnumerator OnLevelLostCoroutine()
     {
-        yield return null;
-
         ResetAllStaticData.Reset();
         LevelController.Instance.HaltExecution();
+
+
+        yield return new WaitForSeconds(1);
+
+        yield return SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
 
         StartLevel(Player.Instance.LastLevelPlayed);
     }
