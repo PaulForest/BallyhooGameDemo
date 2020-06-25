@@ -15,7 +15,7 @@ public class LevelList
     /// <summary>
     /// Dumb workaround to make sure that we keep track of which scenes are levels.
     /// </summary>
-    private const int NumberOfScenesThatAreNotGameLevels = 2;
+    private const int NumberOfScenesThatAreNotGameLevels = 1;
 
     private LevelList()
     {

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using Util;
 
 [RequireComponent(typeof(DontDestroyOnLoad))]
@@ -12,6 +11,6 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("GameplayScene");
+        GameController.Instance.StartGame();
     }
 }

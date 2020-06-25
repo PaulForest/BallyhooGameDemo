@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Level;
 using UnityEngine;
@@ -29,6 +30,16 @@ public class MusicPlayer : MonoBehaviour
 
     public static MusicPlayer Instance => _instance;
     private static MusicPlayer _instance;
+
+    public enum MusicType
+    {
+        None,
+        Title,
+        Gameplay,
+        Boss
+    }
+
+    private MusicType _lastPlayed = MusicType.None;
 
     private void Awake()
     {
@@ -84,17 +95,17 @@ public class MusicPlayer : MonoBehaviour
 
     public void PlayTitleMusic()
     {
-        PlayMusic(ref titleMusic);
+        PlayMusic(MusicType.Title);
     }
 
     public void PlayGameplayMusic()
     {
-        PlayMusic(ref gameplayMusic);
+        PlayMusic(MusicType.Gameplay);
     }
 
     public void PlayBossMusic()
     {
-        PlayMusic(ref bossMusic);
+        PlayMusic(MusicType.Boss);
     }
 
     public void TurnDistortionOn()
@@ -155,8 +166,27 @@ public class MusicPlayer : MonoBehaviour
     //     _audioLowPassFilter.enabled = false;
     // }
 
-    private void PlayMusic(ref List<AudioClip> clips)
+    private void PlayMusic(MusicType musicType)
     {
+        if (_lastPlayed == musicType) return;
+        _lastPlayed = musicType;
+
+        List<AudioClip> clips;
+        switch (musicType)
+        {
+            case MusicType.Title:
+                clips = titleMusic;
+                break;
+            case MusicType.Gameplay:
+                clips = gameplayMusic;
+                break;
+            case MusicType.Boss:
+                clips = bossMusic;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(musicType), musicType, null);
+        }
+
         if (null == clips || clips.Count == 0)
         {
             Debug.LogError("clips need to be defined", this);

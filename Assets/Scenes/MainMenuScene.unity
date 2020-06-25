@@ -993,6 +993,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MusicPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 318188786893682085, guid: 866932c25e1a0194ea3883c192cdffd6,
+        type: 3}
+      propertyPath: lowpassLevelCustomCurve.m_Curve.Array.data[0].value
+      value: 0.026830377
+      objectReference: {fileID: 0}
     - target: {fileID: 318188786893682087, guid: 866932c25e1a0194ea3883c192cdffd6,
         type: 3}
       propertyPath: m_LocalPosition.x
