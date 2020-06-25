@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Level;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,12 +15,12 @@ public class GameController : MonoBehaviour
             if (_instance) return _instance;
 
 
-            Debug.LogError($"GameController should be in the scene");
-            return null;
+            // Debug.LogError($"GameController should be in the scene");
+            // return null;
 
-            // var go = new GameObject("GameController");
-            // _instance = go.AddComponent<GameController>();
-            // return _instance;
+            var go = new GameObject("GameController");
+            _instance = go.AddComponent<GameController>();
+            return _instance;
         }
     }
 
@@ -41,30 +42,32 @@ public class GameController : MonoBehaviour
     {
         GlobalEvents.LevelWon.AddListener(OnLevelWon);
         GlobalEvents.LevelLost.AddListener(OnLevelLost);
+    }
 
+    public void StartGame()
+    {
         StartLevel(Player.Instance.LastLevelPlayed);
     }
 
-    private void StartLevel(int levelBuildIndex)
+    private void StartLevel(LevelData levelData)
     {
-        StartCoroutine(StartLevelCoroutine(levelBuildIndex));
+        StartCoroutine(StartLevelCoroutine(levelData));
     }
 
-    private IEnumerator StartLevelCoroutine(int levelBuildIndex)
+    private IEnumerator StartLevelCoroutine(LevelData levelData)
     {
         ResetAllStaticData.Reset();
 
-
-        yield return SceneManager.LoadSceneAsync(levelBuildIndex, LoadSceneMode.Additive);
+        yield return SceneManager.LoadSceneAsync(levelData.buildIndex);
+        // yield return SceneManager.LoadSceneAsync(levelData.buildIndex, LoadSceneMode.Additive);
 
         var player = Player.Instance;
+        var levelController = LevelController.Instance;
 
-        LevelController.ResetInstance();
-
-        GlobalEvents.LevelStart?.Invoke();
+        GlobalEvents.LevelStart?.Invoke(levelData);
     }
 
-    private void OnLevelWon()
+    private void OnLevelWon(LevelData levelData)
     {
         StartCoroutine(OnLevelWonCoroutine());
     }
@@ -76,15 +79,17 @@ public class GameController : MonoBehaviour
 
         var player = Player.Instance;
 
-        yield return SceneManager.UnloadSceneAsync(player.LastLevelPlayed);
+        // yield return SceneManager.UnloadSceneAsync(player.LastLevelPlayed.buildIndex);
 
-        player.LastLevelPlayed = LevelList.Instance.GetNextLevelBuildIndex(player.LastLevelPlayed);
+        player.LastLevelPlayed = LevelList.Instance.GetNextLevelData();
         player.SaveData();
+
+        yield return new WaitForSeconds(3);
 
         StartLevel(player.LastLevelPlayed);
     }
 
-    private void OnLevelLost()
+    private void OnLevelLost(LevelData levelData)
     {
         Debug.Log("GameController.OnLevelLost()");
         StartCoroutine(OnLevelLostCoroutine());
@@ -95,11 +100,16 @@ public class GameController : MonoBehaviour
         ResetAllStaticData.Reset();
         LevelController.Instance.HaltExecution();
 
+        yield return new WaitForSeconds(3);
 
-        yield return new WaitForSeconds(1);
-
-        yield return SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        // yield return SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
 
         StartLevel(Player.Instance.LastLevelPlayed);
+    }
+
+    private void OnDestroy()
+    {
+        GlobalEvents.LevelWon.RemoveListener(OnLevelWon);
+        GlobalEvents.LevelLost.RemoveListener(OnLevelLost);
     }
 }

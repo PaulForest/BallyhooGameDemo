@@ -1,19 +1,19 @@
-﻿using System;
+﻿using Balls;
 using UnityEngine;
-using Util;
 
 namespace Level
 {
-    [RequireComponent(typeof(DontDestroyOnLoad))]
     public class LevelController : MonoBehaviour
     {
         public static LevelController Instance
         {
             get
             {
+                Debug.Log($"_instance={_instance}");
+
                 if (_instance) return _instance;
 
-                GameObject go = new GameObject("LevelController");
+                var go = new GameObject("LevelController" + Random.Range(1000,9999));
                 _instance = go.AddComponent<LevelController>();
 
                 return _instance;
@@ -22,7 +22,8 @@ namespace Level
 
         private static LevelController _instance;
 
-        private bool _isPlayerWinning = false;
+        private bool _isPlayerWinning;
+        private LevelData CurrentLevelData { get; }
 
         private void Start()
         {
@@ -37,30 +38,21 @@ namespace Level
             // var a = GameController.Instance;
         }
 
-        public static void ResetInstance()
-        {
-            HaltInstance();
-            var levelController = LevelController.Instance;
-        }
-
-        public static void HaltInstance()
-        {
-            if (_instance)
-            {
-                Destroy(Instance.gameObject);
-                _instance = null;
-            }
-        }
-
         /// <summary>
         /// Stops everything related to gameplay for this level
         /// </summary>
         public void HaltExecution()
         {
+            foreach (var playerBall in FindObjectsOfType<PlayerBall>())
+            {
+                Destroy(playerBall.gameObject);
+            }
         }
 
         private void OnDestroy()
         {
+            _instance = null;
+
             GlobalEvents.LastBallDestroyed.RemoveListener(OnLastBallDestroyed);
             GlobalEvents.FirstBallInGoal.RemoveListener(OnFirstBallInGoal);
         }
@@ -74,11 +66,11 @@ namespace Level
         {
             if (_isPlayerWinning)
             {
-                GlobalEvents.LevelWon?.Invoke();
+                GlobalEvents.LevelWon?.Invoke(CurrentLevelData);
             }
             else
             {
-                GlobalEvents.LevelLost?.Invoke();
+                GlobalEvents.LevelLost?.Invoke(CurrentLevelData);
             }
         }
     }

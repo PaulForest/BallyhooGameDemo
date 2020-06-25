@@ -18,17 +18,17 @@ namespace Level
             GlobalEvents.LevelLost.RemoveListener(LevelLost);
         }
 
-        private void LevelLost()
+        private void LevelLost(LevelData levelData)
         {
             // throw new NotImplementedException();
         }
 
-        private void LevelWon()
+        private void LevelWon(LevelData levelData)
         {
 //            throw new NotImplementedException();
         }
 
-        private void LevelStart()
+        private void LevelStart(LevelData levelData)
         {
             // throw new NotImplementedException();
         }
