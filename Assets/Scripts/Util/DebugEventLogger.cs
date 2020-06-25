@@ -1,4 +1,5 @@
 ﻿using Balls;
+using Level;
 using PlayObjects;
 using UnityEngine;
 
@@ -134,19 +135,19 @@ namespace Util
             Debug.Log($"{typeof(DebugEventLogger)}.OnLastBallDestroyed");
         }
 
-        private void OnLevelStartFunc()
+        private void OnLevelStartFunc(LevelData levelData)
         {
-            Debug.Log($"{typeof(DebugEventLogger)}.Level Start");
+            Debug.Log($"{typeof(DebugEventLogger)}.Level Start: levelData={levelData}");
         }
 
-        private void OnLevelWonFunc()
+        private void OnLevelWonFunc(LevelData levelData)
         {
-            Debug.Log($"{typeof(DebugEventLogger)}.levelWon");
+            Debug.Log($"{typeof(DebugEventLogger)}.levelWon: levelData={levelData}");
         }
 
-        private void OnLevelLostFunc()
+        private void OnLevelLostFunc(LevelData levelData)
         {
-            Debug.Log($"{typeof(DebugEventLogger)}.levelLost");
+            Debug.Log($"{typeof(DebugEventLogger)}.levelLost: levelData={levelData}");
         }
 
         private void OnBallDestroyedFunc(PlayerBall playerBall)

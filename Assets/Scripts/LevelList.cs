@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Level;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelList
 {
-    private readonly List<int> _gameLevels = new List<int>();
+    private readonly List<LevelData> _gameLevels = new List<LevelData>();
     public static LevelList Instance => _instance ?? (_instance = new LevelList());
     private static LevelList _instance;
 
-    private static List<int>.Enumerator _gameLevelEnumerator;
+    private static List<LevelData>.Enumerator _gameLevelEnumerator;
 
     /// <summary>
     /// Dumb workaround to make sure that we keep track of which scenes are levels.
@@ -20,7 +22,7 @@ public class LevelList
         var max = SceneManager.sceneCountInBuildSettings;
         for (var i = NumberOfScenesThatAreNotGameLevels; i < max; i++)
         {
-            _gameLevels.Add(i);
+            _gameLevels.Add(new LevelData {buildIndex = i, isBoss = false});
         }
 
         if (_gameLevels.Count == 0)
@@ -34,7 +36,7 @@ public class LevelList
         _gameLevelEnumerator = _gameLevels.GetEnumerator();
     }
 
-    public int GetFirstLevelBuildIndex()
+    public LevelData GetFirstLevelData()
     {
         _gameLevelEnumerator = _gameLevels.GetEnumerator();
         _gameLevelEnumerator.MoveNext();
@@ -42,13 +44,18 @@ public class LevelList
         return _gameLevelEnumerator.Current;
     }
 
-    public int GetNextLevelBuildIndex(int currentLevelBuildIndex)
+    public LevelData GetNextLevelData()
     {
         if (_gameLevelEnumerator.MoveNext())
         {
             return _gameLevelEnumerator.Current;
         }
 
-        return GetFirstLevelBuildIndex();
+        return GetFirstLevelData();
+    }
+
+    public LevelData GetLevelDataForBuildIndex(int buildIndex)
+    {
+        return _gameLevels.FirstOrDefault(data => data.buildIndex == buildIndex);
     }
 }

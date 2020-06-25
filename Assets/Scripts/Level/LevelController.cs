@@ -23,6 +23,7 @@ namespace Level
         private static LevelController _instance;
 
         private bool _isPlayerWinning = false;
+        public LevelData CurrentLevelData { get; private set; }
 
         private void Start()
         {
@@ -74,11 +75,11 @@ namespace Level
         {
             if (_isPlayerWinning)
             {
-                GlobalEvents.LevelWon?.Invoke();
+                GlobalEvents.LevelWon?.Invoke(CurrentLevelData);
             }
             else
             {
-                GlobalEvents.LevelLost?.Invoke();
+                GlobalEvents.LevelLost?.Invoke(CurrentLevelData);
             }
         }
     }
