@@ -91,7 +91,6 @@ public class GameController : MonoBehaviour
 
     private void OnLevelLost(LevelData levelData)
     {
-        Debug.Log("GameController.OnLevelLost()");
         StartCoroutine(OnLevelLostCoroutine());
     }
 
@@ -101,8 +100,6 @@ public class GameController : MonoBehaviour
         LevelController.Instance.HaltExecution();
 
         yield return new WaitForSeconds(3);
-
-        // yield return SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
 
         StartLevel(Player.Instance.LastLevelPlayed);
     }

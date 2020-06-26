@@ -769,7 +769,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh16832
+  m_Name: pb_Mesh-9782
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2407,7 +2407,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh16792
+  m_Name: pb_Mesh-9656
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2882,6 +2882,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 783722389}
     m_Modifications:
+    - target: {fileID: 7211384222187508055, guid: 1cd28f1dff730b94fa8478a2576bb348,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7211384222187508058, guid: 1cd28f1dff730b94fa8478a2576bb348,
         type: 3}
       propertyPath: m_LocalPosition.x
