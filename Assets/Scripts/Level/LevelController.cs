@@ -9,11 +9,9 @@ namespace Level
         {
             get
             {
-                Debug.Log($"_instance={_instance}");
-
                 if (_instance) return _instance;
 
-                var go = new GameObject("LevelController" + Random.Range(1000,9999));
+                var go = new GameObject("LevelController");
                 _instance = go.AddComponent<LevelController>();
 
                 return _instance;
