@@ -61,7 +61,10 @@ namespace PlayObjects
                     }
                 }
 
-                Debug.Log($"took this many iterations: {j}");
+                if (j >= maxIteration)
+                {
+                    Debug.LogWarning($"Too many iterations: {j}, max {maxIteration}", this);
+                }
 
                 var go = GameObject.Instantiate(originalBall.gameObject, pos, transform1.rotation);
                 var newBall = go.GetComponent<PlayerBall>();
@@ -70,5 +73,6 @@ namespace PlayObjects
 
             GlobalEvents.BallSplitEvent?.Invoke(originalBall, this);
         }
+
     }
 }

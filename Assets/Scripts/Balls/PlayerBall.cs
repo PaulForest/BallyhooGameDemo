@@ -1,4 +1,6 @@
-﻿namespace Balls
+﻿using System;
+
+namespace Balls
 {
     public class PlayerBall : OnlyTouchOnce
     {
