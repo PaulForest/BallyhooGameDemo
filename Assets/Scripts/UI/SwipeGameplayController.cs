@@ -23,7 +23,6 @@ namespace UI
         [HideInInspector] private int _screenWidth;
 
         [HideInInspector] private float _dx;
-        [HideInInspector] private float _dy;
 
         private void Awake()
         {
@@ -50,10 +49,9 @@ namespace UI
         {
             if (!shiftCamera) return;
 
-            _dx = 0;
-            _dy = 0;
+            _dx = 0.5f;
 
-            PlatformNeutralInput.GetDeltaXDeltaY(ref _dx, ref _dy);
+            PlatformNeutralInput.GetDeltaXDeltaY(ref _dx);
 
             _currentValue += _dx / _screenWidth;
             _currentValue = Mathf.Clamp01(_currentValue);

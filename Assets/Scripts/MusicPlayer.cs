@@ -21,11 +21,6 @@ public class MusicPlayer : MonoBehaviour
 
     public float transitionTimeSeconds = 1;
 
-    // public float distortionTimeSeconds = 1;
-    // public float distortionLowPassCutoffFrequency = 5000;
-    // public float distortionLowVolume = 0.5f;
-
-    // private float _startingLowPassCutoffFrequency;
     private float _distortionStartingVolume;
 
     public static MusicPlayer Instance => _instance;
@@ -114,28 +109,7 @@ public class MusicPlayer : MonoBehaviour
         _isDistorting = true;
 
         _audioLowPassFilter.enabled = true;
-
-        // StartCoroutine(TurnDistortionOnCo());
     }
-
-    // private IEnumerator TurnDistortionOnCo()
-    // {
-    //     // _startingLowPassCutoffFrequency = _audioLowPassFilter.cutoffFrequency;
-    //     _distortionStartingVolume = _audioSource.volume;
-    //     _audioLowPassFilter.enabled = true;
-    //
-    //     for (var t = transitionTimeSeconds; t >= 0; t -= transitionTimeSeconds / Time.deltaTime)
-    //     {
-    //         var factor = t / Time.deltaTime;
-    //         // _audioLowPassFilter.cutoffFrequency = _startingLowPassCutoffFrequency * factor;
-    //         _audioSource.volume = _distortionStartingVolume * factor;
-    //
-    //         yield return null;
-    //     }
-    //
-    //     _isDistorting = false;
-    // }
-
 
     public void TurnDistortionOff()
     {
@@ -143,28 +117,7 @@ public class MusicPlayer : MonoBehaviour
         _isDistorting = false;
 
         _audioLowPassFilter.enabled = false;
-
-        // StartCoroutine(TurnDistortionOffCo());
     }
-
-    // private IEnumerator TurnDistortionOffCo()
-    // {
-    //     // var startingLowPassCutoffFrequency = _audioLowPassFilter.cutoffFrequency;
-    //     // var startingVolume = _audioSource.volume;
-    //
-    //
-    //     for (var t = 0f; t <= transitionTimeSeconds; t += transitionTimeSeconds / Time.deltaTime)
-    //     {
-    //         var factor = t / Time.deltaTime;
-    //         // _audioLowPassFilter.cutoffFrequency = _startingLowPassCutoffFrequency * factor;
-    //         _audioSource.volume = _distortionStartingVolume * factor;
-    //
-    //         yield return null;
-    //     }
-    //
-    //     _isDistorting = false;
-    //     _audioLowPassFilter.enabled = false;
-    // }
 
     private void PlayMusic(MusicType musicType)
     {

@@ -30,6 +30,7 @@ namespace PlayObjects
 
         /// <summary>
         /// Clones the <see cref="originalBall"/> <see cref="mSplitCount"/> times.
+        /// We're doing the splits, and there are balls around.  There's a Jean-Claude Van Damme joke in there somewhere. :)
         /// </summary>
         /// <param name="originalBall"/>
         private void DoTheSplits(PlayerBall originalBall)
@@ -38,14 +39,29 @@ namespace PlayObjects
 
             _collideOnlyOnce.SetCannotCollideWithT(originalBall);
 
+            var transform1 = originalBall.transform;
+            var radius = transform1.localScale.x;
+            var layerMask = 1 >> LayerMask.NameToLayer("Default");
+
             for (var i = 0; i < mSplitCount; i++)
             {
-                var pos = Random.onUnitSphere;
+                var pos = new Vector3();
+                const int maxIteration = 10;
+                int j;
+                for (j = 0; j < maxIteration; j++)
+                {
+                    pos = Random.onUnitSphere;
+                    pos *= radius;
+                    pos += transform1.position;
+                    pos.z = 0;
 
-                var transform1 = originalBall.transform;
-                pos *= transform1.localScale.x;
-                pos += transform1.position;
-                pos.z = 0;
+                    if (!Physics.CheckSphere(pos, radius, layerMask))
+                    {
+                        break;
+                    }
+                }
+
+                Debug.Log($"took this many iterations: {j}");
 
                 var go = GameObject.Instantiate(originalBall.gameObject, pos, transform1.rotation);
                 var newBall = go.GetComponent<PlayerBall>();
