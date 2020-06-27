@@ -1,21 +1,33 @@
 ﻿using Balls;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace PlayObjects
 {
-    [RequireComponent(typeof(CollideOnlyOncePlayerBall))]
+    [RequireComponent(typeof(CollideOnlyOncePlayerBall), typeof(TMP_Text))]
     public class BallSplitter : MonoBehaviour
     {
         [Header("How many balls will this split into?")] [SerializeField]
         protected int mSplitCount;
 
-        private CollideOnlyOncePlayerBall _collideOnlyOnce;
+        [SerializeField] private CollideOnlyOncePlayerBall _collideOnlyOnce;
+        [SerializeField] private TMP_Text _splitCountLabel;
 
         private void Start()
         {
             _collideOnlyOnce = GetComponent<CollideOnlyOncePlayerBall>();
             _collideOnlyOnce.onCollisionEvent.AddListener(OnCollisionEvent);
+
+            if (!_splitCountLabel) _splitCountLabel = GetComponent<TMP_Text>();
+            if (!_splitCountLabel) _splitCountLabel = GetComponentInChildren<TMP_Text>();
+            if (!_splitCountLabel)
+            {
+                Debug.LogError("I need a text field set", this);
+                return;
+            }
+
+            _splitCountLabel.text = $"{mSplitCount} X";
         }
 
         private void OnDestroy()
@@ -73,6 +85,5 @@ namespace PlayObjects
 
             GlobalEvents.BallSplitEvent?.Invoke(originalBall, this);
         }
-
     }
 }

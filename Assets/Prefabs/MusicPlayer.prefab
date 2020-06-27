@@ -51,6 +51,7 @@ MonoBehaviour:
   gameplayMusic:
   - {fileID: 8300000, guid: 3dd09b2d518f74b45b282b99a832f1b9, type: 3}
   - {fileID: 8300000, guid: 8e61728cacf8bda4ebb3bd636d183749, type: 3}
+  - {fileID: 8300000, guid: 3ad3db6e3b592664b8da7fb503428b27, type: 3}
   bossMusic:
   - {fileID: 8300000, guid: 096b0cdd21c13ca41b73603e9ce67a57, type: 3}
   transitionTimeSeconds: 2
