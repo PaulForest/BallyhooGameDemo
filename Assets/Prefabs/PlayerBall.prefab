@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8667322993311820991}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.17, y: 2.07, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b5238ba46b14eed97428de1625d64c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mSplittersUsedBitfield: 0
+  mInteractedWithBitField: 0
 --- !u!33 &6196867572136666349
 MeshFilter:
   m_ObjectHideFlags: 0
