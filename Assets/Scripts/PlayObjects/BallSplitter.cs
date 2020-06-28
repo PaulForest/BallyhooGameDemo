@@ -63,10 +63,10 @@ namespace PlayObjects
                 for (j = 0; j < maxIteration; j++)
                 {
                     pos = Random.onUnitSphere;
+                    pos.z = 0;
                     pos *= radius;
                     pos += transform1.position;
-                    pos.z = 0;
-
+                    
                     if (!Physics.CheckSphere(pos, radius, layerMask))
                     {
                         break;
