@@ -56,6 +56,14 @@ public class LevelList
 
     public LevelData GetLevelDataForBuildIndex(int buildIndex)
     {
-        return _gameLevels.FirstOrDefault(data => data.buildIndex == buildIndex);
+        var levelData = _gameLevels.Find(data => data.buildIndex == buildIndex);
+
+        if (null != levelData) return levelData;
+
+        Debug.LogError(
+            $"GetLevelDataForBuildIndex(buildIndex={buildIndex}): cannot find such a level.  _gameLevels={_gameLevels}");
+        levelData = GetFirstLevelData();
+
+        return levelData;
     }
 }
