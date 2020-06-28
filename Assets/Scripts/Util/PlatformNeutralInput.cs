@@ -11,8 +11,11 @@ namespace Util
         public static void GetDeltaXDeltaY(ref float dx)
         {
 #if UNITY_EDITOR
-            dx = Input.mousePosition.x - _oldMousePos.x;
-            _oldMousePos = Input.mousePosition;
+            if (Input.GetMouseButton(0))
+            {
+                dx = Input.mousePosition.x - _oldMousePos.x;
+                _oldMousePos = Input.mousePosition;
+            }
 #else
             if (Input.touchCount <= 0) return;
 
