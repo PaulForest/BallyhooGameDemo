@@ -14,6 +14,11 @@ namespace PlayObjects
         [SerializeField] private CollideOnlyOncePlayerBall _collideOnlyOnce;
         [SerializeField] private TMP_Text _splitCountLabel;
 
+        /// <summary>
+        ///
+        /// </summary>
+        private int _ballsLeftToSpawn = 0;
+
         private void Start()
         {
             _collideOnlyOnce = GetComponent<CollideOnlyOncePlayerBall>();
