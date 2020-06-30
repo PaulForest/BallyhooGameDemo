@@ -1,10 +1,18 @@
-﻿using Balls;
+﻿using System;
+using System.Collections.Generic;
+using Balls;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace PlayObjects
 {
+    class SpawnBallData
+    {
+        public GameObject original;
+        public int spawnCount;
+    }
+
     [RequireComponent(typeof(CollideOnlyOncePlayerBall), typeof(TMP_Text))]
     public class BallSplitter : MonoBehaviour
     {
@@ -13,11 +21,9 @@ namespace PlayObjects
 
         [SerializeField] private CollideOnlyOncePlayerBall _collideOnlyOnce;
         [SerializeField] private TMP_Text _splitCountLabel;
+        [SerializeField] private int MaxBallsToGeneratePerFrame = 5;
 
-        /// <summary>
-        ///
-        /// </summary>
-        private int _ballsLeftToSpawn = 0;
+        private List<SpawnBallData> _spawnBallData = new List<SpawnBallData>();
 
         private void Start()
         {
@@ -40,6 +46,55 @@ namespace PlayObjects
             _collideOnlyOnce.onCollisionEvent.RemoveListener(OnCollisionEvent);
         }
 
+        private void Update()
+        {
+            if (_spawnBallData.Count == 0) return;
+
+            foreach (var spawnBallData in _spawnBallData)
+            {
+                if (spawnBallData.spawnCount == 0 || spawnBallData.original == null)
+                {
+                    break;
+                }
+
+                var transform1 = spawnBallData.original.transform;
+                var radius = transform1.localScale.x;
+                var layerMask = 1 >> LayerMask.NameToLayer("Default");
+
+                var ballsToSpawnThisFrame = Math.Max(spawnBallData.spawnCount, MaxBallsToGeneratePerFrame);
+                spawnBallData.spawnCount -= ballsToSpawnThisFrame;
+
+                for (var i = 0; i < ballsToSpawnThisFrame; i++)
+                {
+                    var pos = new Vector3();
+                    const int maxIteration = 10;
+                    int j;
+                    for (j = 0; j < maxIteration; j++)
+                    {
+                        pos = Random.onUnitSphere;
+                        pos.z = 0;
+                        pos *= radius;
+                        pos += transform1.position;
+
+                        if (!Physics.CheckSphere(pos, radius, layerMask))
+                        {
+                            break;
+                        }
+                    }
+
+                    if (j >= maxIteration)
+                    {
+                        Debug.LogWarning($"Too many iterations: {j}, max {maxIteration}", this);
+                    }
+
+                    var go = GameObject.Instantiate(spawnBallData.original.gameObject, pos, transform1.rotation);
+                    var newBall = go.GetComponent<PlayerBall>();
+                    go.SetActive(true);
+                    _collideOnlyOnce.SetCannotCollideWithT(newBall);
+                }
+            }
+        }
+
         private void OnCollisionEvent(PlayerBall ball)
         {
             DoTheSplits(ball);
@@ -56,37 +111,14 @@ namespace PlayObjects
 
             _collideOnlyOnce.SetCannotCollideWithT(originalBall);
 
-            var transform1 = originalBall.transform;
-            var radius = transform1.localScale.x;
-            var layerMask = 1 >> LayerMask.NameToLayer("Default");
+            var go = GameObject.Instantiate(originalBall.gameObject, transform.position, Quaternion.identity);
+            go.SetActive(false);
 
-            for (var i = 0; i < mSplitCount; i++)
+            _spawnBallData.Add(new SpawnBallData
             {
-                var pos = new Vector3();
-                const int maxIteration = 10;
-                int j;
-                for (j = 0; j < maxIteration; j++)
-                {
-                    pos = Random.onUnitSphere;
-                    pos.z = 0;
-                    pos *= radius;
-                    pos += transform1.position;
-                    
-                    if (!Physics.CheckSphere(pos, radius, layerMask))
-                    {
-                        break;
-                    }
-                }
-
-                if (j >= maxIteration)
-                {
-                    Debug.LogWarning($"Too many iterations: {j}, max {maxIteration}", this);
-                }
-
-                var go = GameObject.Instantiate(originalBall.gameObject, pos, transform1.rotation);
-                var newBall = go.GetComponent<PlayerBall>();
-                _collideOnlyOnce.SetCannotCollideWithT(newBall);
-            }
+                original = go,
+                spawnCount = mSplitCount
+            });
 
             GlobalEvents.BallSplitEvent?.Invoke(originalBall, this);
         }
