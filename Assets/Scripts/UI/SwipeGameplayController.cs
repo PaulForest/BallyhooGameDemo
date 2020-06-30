@@ -43,13 +43,13 @@ namespace UI
             if (!shiftCamera) Debug.LogError("I need my camera set please");
 
             _screenWidth = Screen.width / 2;
+
+            PlatformNeutralInput.Reset();
         }
 
         public void Update()
         {
             if (!shiftCamera) return;
-
-            _dx = 0.5f;
 
             PlatformNeutralInput.GetDeltaXDeltaY(ref _dx);
 

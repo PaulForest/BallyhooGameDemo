@@ -8,12 +8,21 @@ namespace Util
         private static Vector3 _oldMousePos = new Vector3();
 #endif
 
+        public static void Reset()
+        {
+#if UNITY_EDITOR
+            _oldMousePos = Input.mousePosition;
+#endif
+        }
+
         public static void GetDeltaXDeltaY(ref float dx)
         {
 #if UNITY_EDITOR
-            if (!Input.GetMouseButton(0)) return;
+            if (Input.GetMouseButton(0))
+            {
+                dx = Input.mousePosition.x - _oldMousePos.x;
+            }
 
-            dx = Input.mousePosition.x - _oldMousePos.x;
             _oldMousePos = Input.mousePosition;
 #else
             if (Input.touchCount <= 0) return;
