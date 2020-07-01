@@ -31,7 +31,7 @@ namespace Balls
             }
         }
 
-        protected virtual void ResetData()
+        public virtual void ResetData()
         {
             foreach (var instance in pool)
             {

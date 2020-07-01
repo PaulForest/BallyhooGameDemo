@@ -2,12 +2,13 @@
 {
     public class PlayerBall : OnlyTouchOnce, IPoolableObject
     {
-        private void Awake()
+        private void OnEnable()
         {
             NumberOfNumberOfBallsInPlay++;
+            ResetOnlyTouchOnceData();
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             NumberOfNumberOfBallsInPlay--;
             GlobalEvents.BallDestroyed?.Invoke(this);
@@ -18,7 +19,7 @@
             }
         }
 
-        public static bool HasBallsInPlay => NumberOfNumberOfBallsInPlay > 0;
-        public static int NumberOfNumberOfBallsInPlay { get; private set; }
+        private static bool HasBallsInPlay => NumberOfNumberOfBallsInPlay > 0;
+        private static int NumberOfNumberOfBallsInPlay { get; set; }
     }
 }

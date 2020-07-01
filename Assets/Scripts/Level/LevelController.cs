@@ -41,10 +41,7 @@ namespace Level
         /// </summary>
         public void HaltExecution()
         {
-            foreach (var playerBall in FindObjectsOfType<PlayerBall>())
-            {
-                Destroy(playerBall.gameObject);
-            }
+            BallPool.Instance.ResetData();
         }
 
         private void OnDestroy()

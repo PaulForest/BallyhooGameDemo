@@ -14,5 +14,10 @@ namespace Balls
         {
             mInteractedWithBitField = 0;
         }
+
+        protected void ResetOnlyTouchOnceData()
+        {
+            mInteractedWithBitField = 0;
+        }
     }
 }
