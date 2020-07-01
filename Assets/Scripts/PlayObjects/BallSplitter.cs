@@ -98,6 +98,7 @@ namespace PlayObjects
                     if (j >= maxIteration)
                     {
                         Debug.LogWarning($"Too many iterations: {j}, max {maxIteration}", this);
+                        pos = spawnBallData.pos; 
                     }
 
                     newBall.transform.SetPositionAndRotation(pos, Quaternion.identity);
