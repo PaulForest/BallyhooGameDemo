@@ -9,8 +9,10 @@ namespace PlayObjects
 {
     class SpawnBallData
     {
-        public GameObject original;
+        public Vector3 pos;
+        public CollideOnlyOnceData collideOnlyOnceData;
         public int spawnCount;
+        public float radius;
     }
 
     [RequireComponent(typeof(CollideOnlyOncePlayerBall), typeof(TMP_Text))]
@@ -19,31 +21,31 @@ namespace PlayObjects
         [Header("How many balls will this split into?")] [SerializeField]
         protected int mSplitCount;
 
-        [SerializeField] private CollideOnlyOncePlayerBall _collideOnlyOnce;
-        [SerializeField] private TMP_Text _splitCountLabel;
-        [SerializeField] private int MaxBallsToGeneratePerFrame = 5;
+        [SerializeField] private CollideOnlyOncePlayerBall collideOnlyOnce;
+        [SerializeField] private TMP_Text splitCountLabel;
+        [SerializeField] private int maxBallsToGeneratePerFrame = 5;
 
-        private List<SpawnBallData> _spawnBallData = new List<SpawnBallData>();
+        private readonly List<SpawnBallData> _spawnBallData = new List<SpawnBallData>();
 
         private void Start()
         {
-            _collideOnlyOnce = GetComponent<CollideOnlyOncePlayerBall>();
-            _collideOnlyOnce.onCollisionEvent.AddListener(OnCollisionEvent);
+            collideOnlyOnce = GetComponent<CollideOnlyOncePlayerBall>();
+            collideOnlyOnce.onCollisionEvent.AddListener(OnCollisionEvent);
 
-            if (!_splitCountLabel) _splitCountLabel = GetComponent<TMP_Text>();
-            if (!_splitCountLabel) _splitCountLabel = GetComponentInChildren<TMP_Text>();
-            if (!_splitCountLabel)
+            if (!splitCountLabel) splitCountLabel = GetComponent<TMP_Text>();
+            if (!splitCountLabel) splitCountLabel = GetComponentInChildren<TMP_Text>();
+            if (!splitCountLabel)
             {
                 Debug.LogError("I need a text field set", this);
                 return;
             }
 
-            _splitCountLabel.text = $"{mSplitCount} X";
+            splitCountLabel.text = $"{mSplitCount} X";
         }
 
         private void OnDestroy()
         {
-            _collideOnlyOnce.onCollisionEvent.RemoveListener(OnCollisionEvent);
+            collideOnlyOnce.onCollisionEvent.RemoveListener(OnCollisionEvent);
         }
 
         private void Update()
@@ -52,20 +54,31 @@ namespace PlayObjects
 
             foreach (var spawnBallData in _spawnBallData)
             {
-                if (spawnBallData.spawnCount == 0 || spawnBallData.original == null)
+                if (spawnBallData.spawnCount == 0)
                 {
+                    // if (!spawnBallData.original)
+                    // {
+                    //     break;
+                    // }
+
+                    // Destroy(spawnBallData.original);
+                    // spawnBallData.original = null;
                     break;
                 }
 
-                var transform1 = spawnBallData.original.transform;
-                var radius = transform1.localScale.x;
                 var layerMask = 1 >> LayerMask.NameToLayer("Default");
 
-                var ballsToSpawnThisFrame = Math.Max(spawnBallData.spawnCount, MaxBallsToGeneratePerFrame);
+                var ballsToSpawnThisFrame = Math.Min(spawnBallData.spawnCount, maxBallsToGeneratePerFrame);
                 spawnBallData.spawnCount -= ballsToSpawnThisFrame;
 
                 for (var i = 0; i < ballsToSpawnThisFrame; i++)
                 {
+                    var newBall = BallPool.Instance.GetAvailableObject();
+                    if (null == newBall)
+                    {
+                        break;
+                    }
+
                     var pos = new Vector3();
                     const int maxIteration = 10;
                     int j;
@@ -73,10 +86,10 @@ namespace PlayObjects
                     {
                         pos = Random.onUnitSphere;
                         pos.z = 0;
-                        pos *= radius;
-                        pos += transform1.position;
+                        pos *= spawnBallData.radius;
+                        pos += spawnBallData.pos;
 
-                        if (!Physics.CheckSphere(pos, radius, layerMask))
+                        if (!Physics.CheckSphere(pos, spawnBallData.radius, layerMask))
                         {
                             break;
                         }
@@ -87,10 +100,10 @@ namespace PlayObjects
                         Debug.LogWarning($"Too many iterations: {j}, max {maxIteration}", this);
                     }
 
-                    var go = GameObject.Instantiate(spawnBallData.original.gameObject, pos, transform1.rotation);
-                    var newBall = go.GetComponent<PlayerBall>();
-                    go.SetActive(true);
-                    _collideOnlyOnce.SetCannotCollideWithT(newBall);
+                    newBall.transform.SetPositionAndRotation(pos, Quaternion.identity);
+
+                    collideOnlyOnce.UpdateFromData(spawnBallData.collideOnlyOnceData);
+                    collideOnlyOnce.SetCannotCollideWithT(newBall);
                 }
             }
         }
@@ -107,17 +120,20 @@ namespace PlayObjects
         /// <param name="originalBall"/>
         private void DoTheSplits(PlayerBall originalBall)
         {
-            if (!_collideOnlyOnce.CanCollideWithBall(originalBall)) return;
+            if (!collideOnlyOnce.CanCollideWithBall(originalBall)) return;
 
-            _collideOnlyOnce.SetCannotCollideWithT(originalBall);
+            collideOnlyOnce.SetCannotCollideWithT(originalBall);
 
-            var go = GameObject.Instantiate(originalBall.gameObject, transform.position, Quaternion.identity);
-            go.SetActive(false);
+            // BallPool.Instance.GetAvailableObject()
+            // var go = GameObject.Instantiate(originalBall.gameObject, transform.position, Quaternion.identity);
+            // go.SetActive(false);
 
-            _spawnBallData.Add(new SpawnBallData
+            _spawnBallData.Add(item: new SpawnBallData
             {
-                original = go,
-                spawnCount = mSplitCount
+                pos = originalBall.transform.position,
+                collideOnlyOnceData = collideOnlyOnce.GetData(),
+                spawnCount = mSplitCount,
+                radius = originalBall.transform.localScale.x
             });
 
             GlobalEvents.BallSplitEvent?.Invoke(originalBall, this);

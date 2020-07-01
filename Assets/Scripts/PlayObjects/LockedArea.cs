@@ -9,6 +9,9 @@ namespace PlayObjects
     {
         [SerializeField] private int collisionCount;
         [SerializeField] private TMP_Text splitCountLabel;
+        
+        [Header("When this is unlocked, we create this many objects.")]
+        [SerializeField] private int explosionCount;
 
         private void Start()
         {
@@ -20,7 +23,7 @@ namespace PlayObjects
             var ball = other.collider.GetComponent<PlayerBall>();
             if (!ball) return;
 
-            Destroy(ball.gameObject);
+            BallPool.Instance.ReturnObject(ball.gameObject);
             collisionCount--;
             
             splitCountLabel.text = collisionCount.ToString();

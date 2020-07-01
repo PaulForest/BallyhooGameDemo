@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Balls
+﻿namespace Balls
 {
-    public class PlayerBall : OnlyTouchOnce
+    public class PlayerBall : OnlyTouchOnce, IPoolableObject
     {
         private void Awake()
         {

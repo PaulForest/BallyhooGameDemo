@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Balls;
 using UnityEngine;
 
 namespace PlayObjects
@@ -8,12 +8,20 @@ namespace PlayObjects
     {
         private void OnCollisionEnter(Collision other)
         {
-            Destroy(other.gameObject);
+            OnTriggerEnter(other.collider);
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            Destroy(other.gameObject);
+            var playerBall = other.GetComponent<PlayerBall>();
+            if (playerBall)
+            {
+                BallPool.Instance.ReturnObject(playerBall.gameObject);
+            }
+            else
+            {
+                Destroy(other.gameObject);
+            }
         }
 
         private void OnValidate()
