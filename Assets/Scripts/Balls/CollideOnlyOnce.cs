@@ -9,7 +9,7 @@ namespace Balls
     {
         public int MyBitFieldMask;
     }
-    
+
     /// <summary>
     /// Provides an efficient way to restrict the number of times collision logic is followed, even when there are many
     /// active objects that could collide with this.
@@ -33,23 +33,25 @@ namespace Balls
     {
         public TUnityEvent onCollisionEvent = new TUnityEvent();
 
-        private CollideOnlyOnceData _collideOnlyOnceData;
+        [SerializeField] private CollideOnlyOnceData collideOnlyOnceData;
 
-        private void Start()
+        private void Awake()
         {
             try
             {
-                _collideOnlyOnceData.MyBitFieldMask = BitVector32.CreateMask(BitMaskCollider.lastBitFieldMask);
+                collideOnlyOnceData.MyBitFieldMask = BitVector32.CreateMask(BitMaskCollider.lastBitFieldMask);
             }
             catch (InvalidOperationException e)
             {
                 Debug.LogError(
                     $"{this}.Start(): cannot use this bitmask: BitMaskCollider.lastBitFieldMask={BitMaskCollider.lastBitFieldMask}");
                 BitMaskCollider.lastBitFieldMask = 0;
-                _collideOnlyOnceData.MyBitFieldMask = BitVector32.CreateMask(BitMaskCollider.lastBitFieldMask);
+                collideOnlyOnceData.MyBitFieldMask = BitVector32.CreateMask(BitMaskCollider.lastBitFieldMask);
             }
 
-            BitMaskCollider.lastBitFieldMask = _collideOnlyOnceData.MyBitFieldMask;
+            BitMaskCollider.lastBitFieldMask = collideOnlyOnceData.MyBitFieldMask;
+
+            name = $"Splitter: {collideOnlyOnceData.MyBitFieldMask}"; // TODO remove
         }
 
         private void OnCollisionEnter(Collision other)
@@ -69,26 +71,28 @@ namespace Balls
 
         public bool CanCollideWithBall(TOnlyTouchOnce ball)
         {
-            return (ball.mInteractedWithBitField & _collideOnlyOnceData.MyBitFieldMask) == 0;
+            return (ball.mInteractedWithBitField & collideOnlyOnceData.MyBitFieldMask) == 0;
         }
 
-        public void SetCannotCollideWithT(TOnlyTouchOnce ball)
+        public void SetYouCannotCollideWithMeT(TOnlyTouchOnce ball)
         {
-            ball.mInteractedWithBitField |= _collideOnlyOnceData.MyBitFieldMask;
+            ball.mInteractedWithBitField |= collideOnlyOnceData.MyBitFieldMask;
+
+            name = $"Ball: {ball.mInteractedWithBitField}"; // TODO remove
         }
 
-        public CollideOnlyOnceData GetData() => _collideOnlyOnceData;
+        public CollideOnlyOnceData GetData() => collideOnlyOnceData;
 
-        public static CollideOnlyOnce<TOnlyTouchOnce, TUnityEvent> CreateFromData(CollideOnlyOnceData collideOnlyOnceData, GameObject go)
-        {
-            var c = go.AddComponent<CollideOnlyOnce<TOnlyTouchOnce, TUnityEvent>>();
-            c._collideOnlyOnceData = collideOnlyOnceData;
-            return c;
-        }
-        
-        public void UpdateFromData(CollideOnlyOnceData collideOnlyOnceData)
-        {
-            _collideOnlyOnceData.MyBitFieldMask = collideOnlyOnceData.MyBitFieldMask;
-        }
+        // public static CollideOnlyOnce<TOnlyTouchOnce, TUnityEvent> CreateFromData(CollideOnlyOnceData collideOnlyOnceData, GameObject go)
+        // {
+        //     var c = go.AddComponent<CollideOnlyOnce<TOnlyTouchOnce, TUnityEvent>>();
+        //     c._collideOnlyOnceData = collideOnlyOnceData;
+        //     return c;
+        // }
+        //
+        // public void UpdateFromData(CollideOnlyOnceData collideOnlyOnceData)
+        // {
+        //     _collideOnlyOnceData.MyBitFieldMask = collideOnlyOnceData.MyBitFieldMask;
+        // }
     }
 }
