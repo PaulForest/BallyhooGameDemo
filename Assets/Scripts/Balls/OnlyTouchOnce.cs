@@ -19,5 +19,18 @@ namespace Balls
         {
             mInteractedWithBitField = 0;
         }
+
+        public CollideOnlyOnceData GetCollideOnlyOnceData()
+        {
+            return new CollideOnlyOnceData
+            {
+                MyBitFieldMask = mInteractedWithBitField
+            };
+        }
+
+        public void UpdateCollideOnlyOnceDataFromExistingData(CollideOnlyOnceData collideOnlyOnceData)
+        {
+            this.mInteractedWithBitField = collideOnlyOnceData.MyBitFieldMask;
+        }
     }
 }
