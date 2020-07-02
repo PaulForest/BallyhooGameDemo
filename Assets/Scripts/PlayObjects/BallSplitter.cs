@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Balls;
+﻿using Balls;
 using TMPro;
 using UnityEngine;
 
@@ -36,9 +34,10 @@ namespace PlayObjects
             collideOnlyOnce.onCollisionEvent.RemoveListener(OnCollisionEvent);
         }
 
-
         private void OnCollisionEvent(PlayerBall ball)
         {
+            if (!collideOnlyOnce.CanCollideWithBall(ball)) return;
+
             DoTheSplits(ball);
         }
 
@@ -49,27 +48,12 @@ namespace PlayObjects
         /// <param name="originalBall"/>
         private void DoTheSplits(PlayerBall originalBall)
         {
-            if (!collideOnlyOnce.CanCollideWithBall(originalBall)) return;
+            collideOnlyOnce.SetYouCannotCollideWithMeT(originalBall);
+            var bitField = originalBall.mInteractedWithBitField;
 
-            collideOnlyOnce.SetCannotCollideWithT(originalBall);
-
-            BallSpawnPoint.AddNewInstance(gameObject, transform.position, collideOnlyOnce.GetData(),
+            BallSpawnPoint.AddNewInstance(gameObject, transform.position,
+                new CollideOnlyOnceData {MyBitFieldMask = bitField},
                 mSplitCount, originalBall.transform.localScale.x);
-
-            // BallPool.Instance.GetAvailableObject()
-            // var go = GameObject.Instantiate(originalBall.gameObject, transform.position, Quaternion.identity);
-            // go.SetActive(false);
-
-            // var ballSpawnPoint = gameObject.AddComponent<BallSpawnPoint>();
-            // ballSpawnPoint.
-
-            // _spawnBallData.Add(item: new SpawnBallData
-            // {
-            //     pos = originalBall.transform.position,
-            //     collideOnlyOnceData = collideOnlyOnce.GetData(),
-            //     spawnCount = mSplitCount,
-            //     radius = originalBall.transform.localScale.x
-            // });
 
             GlobalEvents.BallSplitEvent?.Invoke(originalBall, this);
         }

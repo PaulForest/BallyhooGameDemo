@@ -29,7 +29,7 @@ namespace Balls
 
             base.Awake();
             _instance = this;
-            
+
             GlobalEvents.LevelStart.AddListener(OnLevelChanged);
             GlobalEvents.LevelWon.AddListener(OnLevelChanged);
             GlobalEvents.LevelLost.AddListener(OnLevelChanged);
@@ -46,9 +46,9 @@ namespace Balls
             GlobalEvents.LevelWon.RemoveListener(OnLevelChanged);
             GlobalEvents.LevelLost.RemoveListener(OnLevelChanged);
 
-            foreach (var go in pool)
+            foreach (var myInstance in pool)
             {
-                Destroy(go);
+                Destroy(myInstance.gameObject);
             }
 
             pool.Clear();

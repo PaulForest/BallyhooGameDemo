@@ -438,8 +438,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mSplitCount: 10
-  _collideOnlyOnce: {fileID: 1148666076065593641}
-  _splitCountLabel: {fileID: 3097089314355572332}
+  collideOnlyOnce: {fileID: 1148666076065593641}
+  splitCountLabel: {fileID: 3097089314355572332}
 --- !u!54 &1148666076065593634
 Rigidbody:
   m_ObjectHideFlags: 0

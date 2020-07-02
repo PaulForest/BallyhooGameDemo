@@ -9,7 +9,7 @@ namespace Balls
     {
         public int MyBitFieldMask;
     }
-    
+
     /// <summary>
     /// Provides an efficient way to restrict the number of times collision logic is followed, even when there are many
     /// active objects that could collide with this.
@@ -35,7 +35,7 @@ namespace Balls
 
         [SerializeField] private CollideOnlyOnceData collideOnlyOnceData;
 
-        private void Start()
+        private void Awake()
         {
             try
             {
@@ -50,6 +50,8 @@ namespace Balls
             }
 
             BitMaskCollider.lastBitFieldMask = collideOnlyOnceData.MyBitFieldMask;
+
+            name = $"Splitter: {collideOnlyOnceData.MyBitFieldMask}"; // TODO remove
         }
 
         private void OnCollisionEnter(Collision other)
@@ -72,9 +74,11 @@ namespace Balls
             return (ball.mInteractedWithBitField & collideOnlyOnceData.MyBitFieldMask) == 0;
         }
 
-        public void SetCannotCollideWithT(TOnlyTouchOnce ball)
+        public void SetYouCannotCollideWithMeT(TOnlyTouchOnce ball)
         {
             ball.mInteractedWithBitField |= collideOnlyOnceData.MyBitFieldMask;
+
+            name = $"Ball: {ball.mInteractedWithBitField}"; // TODO remove
         }
 
         public CollideOnlyOnceData GetData() => collideOnlyOnceData;

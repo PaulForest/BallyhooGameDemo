@@ -27,15 +27,6 @@ namespace PlayObjects
             return ballSpawnPoint;
         }
 
-        // private void Start()
-        // {
-        //     var ball = BallPool.Instance.GetAvailableObject();
-        //     if (ball == null) return;
-        //     
-        //     ball.transform.SetPositionAndRotation(transform.position, Quaternion.identity);
-        //     ball.UpdateCollideOnlyOnceDataFromExistingData(collideOnlyOnceData);
-        // }
-
         private void Update()
         {
             if (spawnCount == 0)
@@ -49,11 +40,13 @@ namespace PlayObjects
             var ballsToSpawnThisFrame = Math.Min(spawnCount, maxBallsToGeneratePerFrame);
             spawnCount -= ballsToSpawnThisFrame;
 
+            var ballPool = BallPool.Instance;
             for (var i = 0; i < ballsToSpawnThisFrame; i++)
             {
-                var newBall = BallPool.Instance.GetAvailableObject();
+                var newBall = ballPool.GetAvailableObject();
                 if (null == newBall)
                 {
+                    Debug.LogError($"Could not get a new object from the pool");
                     break;
                 }
 
@@ -82,6 +75,9 @@ namespace PlayObjects
                 newBall.transform.SetPositionAndRotation(newPos, Quaternion.identity);
                 newBall.UpdateCollideOnlyOnceDataFromExistingData(collideOnlyOnceData);
             }
+
+            if (spawnCount != 0) return;
+            Destroy(this);
         }
     }
 }
