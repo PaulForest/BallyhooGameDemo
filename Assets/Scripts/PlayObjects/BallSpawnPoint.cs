@@ -55,7 +55,7 @@ namespace PlayObjects
                 {
                     newPos = Random.onUnitSphere;
                     newPos.z = 0;
-                    newPos *= radius;
+                    newPos *= radius * 2;
                     newPos += transform.position;
 
                     if (!Physics.CheckSphere(newPos, radius, layerMask))

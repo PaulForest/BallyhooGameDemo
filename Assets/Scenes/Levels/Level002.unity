@@ -194,7 +194,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh22056
+  m_Name: pb_Mesh-112548
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -364,6 +364,7 @@ GameObject:
   - component: {fileID: 40011092}
   - component: {fileID: 40011091}
   - component: {fileID: 40011090}
+  - component: {fileID: 40011095}
   m_Layer: 0
   m_Name: Cylinder (1)
   m_TagString: Untagged
@@ -815,13 +816,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &40011095
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 40011089}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!43 &83217628
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh22022
+  m_Name: pb_Mesh19318
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1090,7 +1107,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh21996
+  m_Name: pb_Mesh-112430
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1267,7 +1284,7 @@ PrefabInstance:
     - target: {fileID: 6852825759320341964, guid: e8ad41953ab22a3418cffe6a506f380a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.053
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6852825759320341964, guid: e8ad41953ab22a3418cffe6a506f380a,
         type: 3}
@@ -1399,6 +1416,7 @@ GameObject:
   - component: {fileID: 436194250}
   - component: {fileID: 436194249}
   - component: {fileID: 436194248}
+  - component: {fileID: 436194254}
   m_Layer: 0
   m_Name: Block
   m_TagString: Untagged
@@ -1717,6 +1735,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &436194254
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 436194247}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &483531960
 GameObject:
   m_ObjectHideFlags: 0
@@ -1730,6 +1764,7 @@ GameObject:
   - component: {fileID: 483531963}
   - component: {fileID: 483531962}
   - component: {fileID: 483531961}
+  - component: {fileID: 483531966}
   m_Layer: 0
   m_Name: Torus (1)
   m_TagString: Untagged
@@ -4755,13 +4790,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &483531966
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 483531960}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!43 &509329290
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh22296
+  m_Name: pb_Mesh19444
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4940,7 +4991,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh22248
+  m_Name: pb_Mesh19410
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -5103,7 +5154,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh22278
+  m_Name: pb_Mesh19426
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -5312,7 +5363,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh22098
+  m_Name: pb_Mesh19366
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -5574,6 +5625,7 @@ GameObject:
   - component: {fileID: 950242913}
   - component: {fileID: 950242912}
   - component: {fileID: 950242911}
+  - component: {fileID: 950242916}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -6025,6 +6077,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &950242916
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 950242910}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1053312218
 GameObject:
   m_ObjectHideFlags: 0
@@ -6121,7 +6189,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh21962
+  m_Name: pb_Mesh19286
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -6424,6 +6492,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: BallPool
       objectReference: {fileID: 0}
+    - target: {fileID: 66220958067754425, guid: ff0c42842396a1a4c95d1d7e92e0525d,
+        type: 3}
+      propertyPath: initialCount
+      value: 9999
+      objectReference: {fileID: 0}
+    - target: {fileID: 66220958067754425, guid: ff0c42842396a1a4c95d1d7e92e0525d,
+        type: 3}
+      propertyPath: allowExpansion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 66220958067754426, guid: ff0c42842396a1a4c95d1d7e92e0525d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6588,7 +6666,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh22228
+  m_Name: pb_Mesh-112478
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -6751,7 +6829,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh22042
+  m_Name: pb_Mesh19332
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7346,6 +7424,7 @@ GameObject:
   - component: {fileID: 1855840150}
   - component: {fileID: 1855840149}
   - component: {fileID: 1855840148}
+  - component: {fileID: 1855840153}
   m_Layer: 0
   m_Name: Torus
   m_TagString: Untagged
@@ -10726,6 +10805,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1855840153
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1855840147}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!4 &1856670797 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2472852729606078982, guid: 1cd28f1dff730b94fa8478a2576bb348,
@@ -10756,7 +10851,6 @@ GameObject:
   - component: {fileID: 2027915711}
   - component: {fileID: 2027915710}
   - component: {fileID: 2027915709}
-  - component: {fileID: 2027915708}
   m_Layer: 0
   m_Name: Back
   m_TagString: Untagged
@@ -10764,20 +10858,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
---- !u!64 &2027915708
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2027915707}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 509329290}
 --- !u!114 &2027915709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11061,7 +11141,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh22128
+  m_Name: pb_Mesh-112518
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
