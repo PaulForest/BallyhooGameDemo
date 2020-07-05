@@ -16,7 +16,7 @@ namespace PhysSound
                 return;
 
             GameObject g = new GameObject("PhysSound Temp Audio Pool");
-            PhysSoundTempAudioPool p =  g.AddComponent<PhysSoundTempAudioPool>();
+            PhysSoundTempAudioPool p = g.AddComponent<PhysSoundTempAudioPool>();
             p.Initialize();
         }
 
@@ -30,7 +30,7 @@ namespace PhysSound
             if (!template)
                 return a;
 
-            GetAudioSourceCopy(template, a);
+            CopyAudioSource(template, a);
 
             return a;
         }
@@ -38,7 +38,7 @@ namespace PhysSound
         /// <summary>
         /// Applies the properties of the template AudioSource to the target AudioSource.
         /// </summary>
-        public static void GetAudioSourceCopy(AudioSource template, AudioSource target)
+        public static void CopyAudioSource(AudioSource template, AudioSource target)
         {
             target.bypassEffects = template.bypassEffects;
             target.bypassListenerEffects = template.bypassListenerEffects;
@@ -80,7 +80,7 @@ namespace PhysSound
                 PhysSoundTempAudio a = g.AddComponent<PhysSoundTempAudio>();
                 a.Initialize(this);
 
-                audioSources[i] = a;   
+                audioSources[i] = a;
             }
         }
 
@@ -107,6 +107,38 @@ namespace PhysSound
                 if (i >= TempAudioPoolSize)
                     i = 0;
             }
+        }
+
+        public AudioSource GetSource(AudioSource template)
+        {
+            int checkedIndices = 0;
+            int i = lastAvailable;
+
+            while (checkedIndices < TempAudioPoolSize)
+            {
+                PhysSoundTempAudio a = audioSources[i];
+
+                if (!a.gameObject.activeInHierarchy)
+                {
+                    CopyAudioSource(template, a.Audio);
+                    a.gameObject.SetActive(true);
+                    lastAvailable = i;
+                    return a.Audio;
+                }
+
+                i++;
+                checkedIndices++;
+
+                if (i >= TempAudioPoolSize)
+                    i = 0;
+            }
+
+            return null;
+        }
+
+        public void ReleaseSource(AudioSource a)
+        {
+            a.Stop();
         }
     }
 }

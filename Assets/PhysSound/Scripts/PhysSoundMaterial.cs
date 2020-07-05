@@ -8,15 +8,17 @@ namespace PhysSound
         public int MaterialTypeKey;
         public int FallbackTypeIndex;
         public int FallbackTypeKey;
+        public AnimationCurve VolumeCurve = AnimationCurve.Linear(0, 0, 1, 1);
 
         public Range RelativeVelocityThreshold;
         public float PitchRandomness = 0.1f;
+        public bool TimeScalePitch;
         public float SlidePitchMod = 0.05f;
         public float SlideVolMultiplier = 1;
         public float ImpactNormalBias = 1;
         public float ScaleMod = 0.15f;
 
-        public LayerMask CollisionMask= -1;
+        public LayerMask CollisionMask = -1;
 
         public bool UseCollisionVelocity = true;
         public bool ScaleImpactVolume = true;
@@ -65,14 +67,13 @@ namespace PhysSound
             if (b)
                 m = b.GetPhysSoundMaterial(contact);
 
+            float velNorm = GetImpactVolume(relativeVel, norm);
+            if (velNorm <= 0)
+                return null;
+
             //Get sounds using collision velocity
             if (UseCollisionVelocity)
             {
-                float velNorm = GetImpactVolume(relativeVel, norm);
-
-                if (velNorm < 0)
-                    return null;
-
                 if (m)
                 {
                     PhysSoundAudioSet audSet;
@@ -112,7 +113,7 @@ namespace PhysSound
             float slideAmt = norm == Vector3.zero ? 1 : 1 - Mathf.Abs(Vector3.Dot(norm, relativeVel));
             float slideVel = (slideAmt) * relativeVel.magnitude * SlideVolMultiplier;
 
-            return RelativeVelocityThreshold.Normalize(slideVel);
+            return VolumeCurve.Evaluate(RelativeVelocityThreshold.Normalize(slideVel));
         }
 
         /// <summary>
@@ -126,7 +127,7 @@ namespace PhysSound
             if (impactVel < RelativeVelocityThreshold.Min)
                 return -1;
 
-            return RelativeVelocityThreshold.Normalize(impactVel);
+            return VolumeCurve.Evaluate(RelativeVelocityThreshold.Normalize(impactVel));
         }
 
         /// <summary>
@@ -142,7 +143,12 @@ namespace PhysSound
         /// </summary>
         public float GetScaleModPitch(Vector3 scale)
         {
-            return (1 - ScaleMod) + (1.7320508075688772f / scale.magnitude) * ScaleMod;
+            float val = (1 - ScaleMod) + (1.7320508075688772f / scale.magnitude) * ScaleMod;
+
+            if (TimeScalePitch)
+                val *= Time.timeScale;
+
+            return val;
         }
 
         /// <summary>

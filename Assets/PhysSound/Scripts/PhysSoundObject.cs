@@ -4,47 +4,15 @@ using System.Collections.Generic;
 namespace PhysSound
 {
     [AddComponentMenu("PhysSound/PhysSound Object")]
-    public class PhysSoundObject : PhysSoundBase
+    public class PhysSoundObject : PhysSoundObjectBase
     {
-        public PhysSoundMaterial SoundMaterial;
-
-        public bool AutoCreateSources;
-        public bool PlayClipAtPoint;
-        public bool HitsTriggers;
-
-        public AudioSource ImpactAudio;
-
         public List<PhysSoundAudioContainer> AudioContainers = new List<PhysSoundAudioContainer>();
-
-        private float baseImpactVol, baseImpactPitch;
-
         private Dictionary<int, PhysSoundAudioContainer> _audioContainersDic;
-
-        private Vector3 _prevVelocity;
-        private bool _setPrevVelocity = true;
-
-        private Vector3 _prevPosition;
-        private Vector3 _kinematicVelocity;
-        private Quaternion _prevRotation;
-        private float _kinematicAngularVelocity;
-
-        private int _lastFrame;
-
-        private Rigidbody _r;
-        private Rigidbody2D _r2D;
-
-        void Start()
-        {
-            if (SoundMaterial == null)
-                return;
-
-            Initialize();
-        }
 
         /// <summary>
         /// Initializes the PhysSoundObject. Use this if you adding a PhysSoundObject component to an object at runtime.
         /// </summary>
-        public void Initialize()
+        public override void Initialize()
         {
             _r = GetComponent<Rigidbody>();
             _r2D = GetComponent<Rigidbody2D>();
@@ -65,7 +33,7 @@ namespace PhysSound
                     PhysSoundAudioContainer audCont = new PhysSoundAudioContainer(audSet.Key);
                     audCont.SlideAudio = PhysSoundTempAudioPool.GetAudioSourceCopy(ImpactAudio, this.gameObject);
 
-                    audCont.Initialize(SoundMaterial);
+                    audCont.Initialize(this);
                     _audioContainersDic.Add(audCont.KeyIndex, audCont);
                     AudioContainers.Add(audCont);
                 }
@@ -93,7 +61,11 @@ namespace PhysSound
                             continue;
                         }
 
-                        audCont.Initialize(SoundMaterial);
+                        if (PlayClipAtPoint)
+                            audCont.Initialize(this, ImpactAudio);
+                        else
+                            audCont.Initialize(this);
+
                         _audioContainersDic.Add(audCont.KeyIndex, audCont);
                     }
                 }
@@ -126,7 +98,7 @@ namespace PhysSound
         /// <summary>
         /// Enables or Disables this script along with its associated AudioSources.
         /// </summary>
-        public void SetEnabled(bool enable)
+        public override void SetEnabled(bool enable)
         {
             if (enable && this.enabled == false)
             {
@@ -155,55 +127,7 @@ namespace PhysSound
             }
         }
 
-        /// <summary>
-        /// Gets the PhysSound Material of this object.
-        /// </summary>
-        public override PhysSoundMaterial GetPhysSoundMaterial(Vector3 contactPoint)
-        {
-            return SoundMaterial;
-        }
-
-        private Vector3 TotalKinematicVelocity
-        {
-            get { return _kinematicVelocity + (Vector3.one * _kinematicAngularVelocity); }
-        }
-
         #region Main Functions
-
-        private void playImpactSound(GameObject otherObject, Vector3 relativeVelocity, Vector3 normal, Vector3 contactPoint)
-        {
-            if (SoundMaterial == null || !this.enabled || SoundMaterial.AudioSets.Count == 0 || Time.frameCount == _lastFrame)
-            {
-                return;
-            }
-
-            if (ImpactAudio)
-            {
-                AudioClip a = SoundMaterial.GetImpactAudio(otherObject, relativeVelocity, normal, contactPoint);
-
-                if (a)
-                {
-                    float pitch = baseImpactPitch * SoundMaterial.GetScaleModPitch(transform.localScale) + SoundMaterial.GetRandomPitch();
-                    float vol = baseImpactVol * SoundMaterial.GetScaleModVolume(transform.localScale) * SoundMaterial.GetImpactVolume(relativeVelocity, normal);
-
-                    if (PlayClipAtPoint)
-                    {
-                        PhysSoundTempAudioPool.Instance.PlayClip(a, transform.position, ImpactAudio, SoundMaterial.ScaleImpactVolume ? vol : ImpactAudio.volume, pitch);
-                    }
-                    else
-                    {
-                        ImpactAudio.pitch = pitch;
-                        if (SoundMaterial.ScaleImpactVolume)
-                            ImpactAudio.volume = vol;
-
-                        ImpactAudio.clip = a;
-                        ImpactAudio.Play();
-                    }
-
-                    _lastFrame = Time.frameCount;
-                }
-            }
-        }
 
         private void setSlideTargetVolumes(GameObject otherObject, Vector3 relativeVelocity, Vector3 normal, Vector3 contactPoint, bool exit)
         {
@@ -452,8 +376,6 @@ namespace PhysSound
         }
 
         #endregion
-
-
     }
 
     [System.Serializable]
@@ -462,12 +384,19 @@ namespace PhysSound
         public int KeyIndex;
         public AudioSource SlideAudio;
 
-        private PhysSoundMaterial _mat;
+        private PhysSoundObject physSoundObject;
         private float _targetVolume;
         private float _baseVol, _basePitch, _basePitchRand;
 
         private int _lastFrame;
         private bool _lastExit;
+
+        private AudioSource currAudioSource;
+
+        private PhysSoundMaterial soundMaterial
+        {
+            get { return physSoundObject.SoundMaterial; }
+        }
 
         public PhysSoundAudioContainer(int k)
         {
@@ -475,22 +404,37 @@ namespace PhysSound
         }
 
         /// <summary>
-        /// Initializes this Audio Container with the given AudioClip. Will do nothing if SlideAudio is not assigned.
+        /// Initializes this Audio Container for no audio pooling. Will do nothing if SlideAudio is not assigned.
         /// </summary>
-        /// <param name="clip"></param>
-        public void Initialize(PhysSoundMaterial m)
+        public void Initialize(PhysSoundObject obj)
         {
             if (SlideAudio == null)
                 return;
 
-            _mat = m;
+            physSoundObject = obj;
 
-            SlideAudio.clip = _mat.GetAudioSet(KeyIndex).Slide;
             _baseVol = SlideAudio.volume;
             _basePitch = SlideAudio.pitch;
             _basePitchRand = _basePitch;
+
+            SlideAudio.clip = soundMaterial.GetAudioSet(KeyIndex).Slide;
             SlideAudio.loop = true;
             SlideAudio.volume = 0;
+
+            currAudioSource = SlideAudio;
+        }
+
+        /// <summary>
+        /// Initializes this Audio Container for audio pooling.
+        /// </summary>
+        public void Initialize(PhysSoundObject obj, AudioSource template)
+        {
+            physSoundObject = obj;
+            SlideAudio = template;
+
+            _baseVol = template.volume;
+            _basePitch = template.pitch;
+            _basePitchRand = _basePitch;
         }
 
         /// <summary>
@@ -501,7 +445,7 @@ namespace PhysSound
             if (SlideAudio == null)
                 return;
 
-            float vol = exit || !_mat.CollideWith(otherObject) ? 0 : _mat.GetSlideVolume(relativeVelocity, normal) * _baseVol * mod;
+            float vol = exit || !soundMaterial.CollideWith(otherObject) ? 0 : soundMaterial.GetSlideVolume(relativeVelocity, normal) * _baseVol * mod;
 
             if (_lastFrame == Time.frameCount)
             {
@@ -511,13 +455,32 @@ namespace PhysSound
             else
                 _targetVolume = vol;
 
-            if (!SlideAudio.isPlaying)
+            if (physSoundObject.PlayClipAtPoint && currAudioSource == null && _targetVolume > 0.001f)
             {
-                _basePitchRand = _basePitch * _mat.GetScaleModPitch(parentObject.transform.localScale) + _mat.GetRandomPitch();
-                SlideAudio.Play();
+                _basePitchRand = _basePitch * soundMaterial.GetScaleModPitch(parentObject.transform.localScale) + soundMaterial.GetRandomPitch();
+                currAudioSource = PhysSoundTempAudioPool.Instance.GetSource(SlideAudio);
+
+                if (currAudioSource)
+                {
+                    currAudioSource.clip = soundMaterial.GetAudioSet(KeyIndex).Slide;
+                    currAudioSource.volume = _targetVolume;
+                    currAudioSource.loop = true;
+                    currAudioSource.Play();
+                }
+            }
+            else if (currAudioSource && !currAudioSource.isPlaying)
+            {
+                _basePitchRand = _basePitch * soundMaterial.GetScaleModPitch(parentObject.transform.localScale) + soundMaterial.GetRandomPitch();
+                currAudioSource.loop = true;
+                currAudioSource.volume = _targetVolume;
+                currAudioSource.Play();
             }
 
-            SlideAudio.pitch = _basePitchRand + relativeVelocity.magnitude * _mat.SlidePitchMod;
+            if (currAudioSource)
+                currAudioSource.pitch = _basePitchRand + relativeVelocity.magnitude * soundMaterial.SlidePitchMod;
+
+            if (soundMaterial.TimeScalePitch)
+                currAudioSource.pitch *= Time.timeScale;
 
             _lastExit = exit;
             _lastFrame = Time.frameCount;
@@ -528,13 +491,24 @@ namespace PhysSound
         /// </summary>
         public void UpdateVolume()
         {
-            if (SlideAudio == null)
+            if (SlideAudio == null || currAudioSource == null)
                 return;
 
-            SlideAudio.volume = Mathf.MoveTowards(SlideAudio.volume, _targetVolume, 0.06f);
+            currAudioSource.transform.position = physSoundObject.transform.position;
+            currAudioSource.volume = Mathf.MoveTowards(currAudioSource.volume, _targetVolume, 0.1f);
 
-            if (SlideAudio.volume < 0.01f)
-                SlideAudio.Stop();
+            if (currAudioSource.volume < 0.001f)
+            {
+                if (physSoundObject.PlayClipAtPoint)
+                {
+                    PhysSoundTempAudioPool.Instance.ReleaseSource(currAudioSource);
+                    currAudioSource = null;
+                }
+                else
+                {
+                    currAudioSource.Stop();
+                }
+            }
         }
 
         /// <summary>

@@ -3,19 +3,19 @@ using UnityEditor;
 
 namespace PhysSound
 {
-    [CustomEditor(typeof(PhysSoundObject))]
+    [CustomEditor(typeof(PhysSoundObjectLite))]
     [CanEditMultipleObjects]
-    public class PhysSoundObjectEditor : Editor
+    public class PhysSoundObjectLiteEditor : Editor
     {
         float dividerHeight = 2;
 
         SerializedProperty mat, impactAudio, autoCreate, playClipPoint, hitsTriggers;
-        PhysSoundObject obj;
+        PhysSoundObjectLite obj;
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            obj = target as PhysSoundObject;
+            obj = target as PhysSoundObjectLite;
 
             mat = serializedObject.FindProperty("SoundMaterial");
             impactAudio = serializedObject.FindProperty("ImpactAudio");
@@ -36,30 +36,6 @@ namespace PhysSound
                 return;
             }
 
-            //Update the audio container list with new audio sets
-            foreach (PhysSoundAudioSet audSet in obj.SoundMaterial.AudioSets)
-            {
-                if (!obj.HasAudioContainer(audSet.Key) && audSet.Slide != null)
-                {
-                    obj.AddAudioContainer(audSet.Key);
-                    EditorUtility.SetDirty(obj);
-                }
-            }
-
-            //Remove any audio containers that don't match with the material.
-            for (int i = 0; i < obj.AudioContainers.Count; i++)
-            {
-                PhysSoundAudioContainer audCont = obj.AudioContainers[i];
-
-                if (!obj.SoundMaterial.HasAudioSet(audCont.KeyIndex) || obj.SoundMaterial.GetAudioSet(audCont.KeyIndex).Slide == null)
-                {
-                    obj.RemoveAudioContainer(audCont.KeyIndex);
-                    EditorUtility.SetDirty(obj);
-                    i--;
-                    continue;
-                }
-            }
-
             //EditorGUILayout.Separator();
 
             if (obj.SoundMaterial.AudioSets.Count > 0)
@@ -68,9 +44,7 @@ namespace PhysSound
 
                 EditorGUILayout.LabelField("Audio Sources:", EditorStyles.boldLabel);
 
-                if (!obj.PlayClipAtPoint)
-                    EditorGUILayout.PropertyField(autoCreate);
-
+                EditorGUILayout.PropertyField(autoCreate);
                 EditorGUILayout.PropertyField(playClipPoint, new GUIContent("Use Audio Pool"));
                 EditorGUILayout.PropertyField(hitsTriggers);
 
@@ -83,19 +57,10 @@ namespace PhysSound
                 else
                 {
                     if (!obj.PlayClipAtPoint)
-                    {
                         EditorGUILayout.PropertyField(impactAudio, true);
-
-                        EditorGUILayout.Separator();
-
-                        for (int i = 0; i < obj.AudioContainers.Count; i++)
-                        {
-                            PhysSoundAudioContainer audCont = obj.AudioContainers[i];
-                            audCont.SlideAudio = EditorGUILayout.ObjectField(PhysSoundTypeList.GetKey(audCont.KeyIndex) + " Slide Audio", audCont.SlideAudio, typeof(AudioSource), true) as AudioSource;
-                        }
-                    }
                     else
                         EditorGUILayout.PropertyField(impactAudio, new GUIContent("Template Impact Audio"), true);
+
                 }
             }
 

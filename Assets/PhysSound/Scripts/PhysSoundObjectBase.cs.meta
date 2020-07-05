@@ -1,11 +1,6 @@
 fileFormatVersion: 2
-guid: 91c0dc3ffa247314b8af35444e57e413
-labels:
-- Physics
-- Sound
-- Audio
-- Impact
-timeCreated: 1432442511
+guid: 7148ab476afc6254489966e0e8058a40
+timeCreated: 1489955795
 licenseType: Free
 MonoImporter:
   serializedVersion: 2

@@ -13,7 +13,7 @@ namespace PhysSound
         FoldoutList audioSetFoldout = new FoldoutList();
         FoldoutList impactsFoldout = new FoldoutList();
 
-        SerializedProperty pitchRand, scaleMod, slidePitchMod, slideVolMult, useColVel, scImpVol, relVelThr, impNormBias, collMask;
+        SerializedProperty timeScalePitch, pitchRand, scaleMod, slidePitchMod, slideVolMult, useColVel, scImpVol, relVelThr, impNormBias, collMask;
 
         public override void OnInspectorGUI()
         {
@@ -21,6 +21,7 @@ namespace PhysSound
             bool dupeFound = false;
             bool nullFound = false;
 
+            timeScalePitch = serializedObject.FindProperty("TimeScalePitch");
             pitchRand = serializedObject.FindProperty("PitchRandomness");
             scaleMod = serializedObject.FindProperty("ScaleMod");
             slidePitchMod = serializedObject.FindProperty("SlidePitchMod");
@@ -39,10 +40,12 @@ namespace PhysSound
             EditorGUILayout.Separator();
 
             EditorGUILayout.PropertyField(relVelThr, true);
+            mat.VolumeCurve = EditorGUILayout.CurveField("Volume Curve", mat.VolumeCurve);
 
             EditorGUILayout.Separator();
 
             EditorGUILayout.PropertyField(pitchRand);
+            EditorGUILayout.PropertyField(timeScalePitch);
             EditorGUILayout.Slider(scaleMod, 0, 1, "Object Scale Mod");
             EditorGUILayout.Slider(impNormBias, 0, 1, "Impact Normal Bias");
 
@@ -52,7 +55,7 @@ namespace PhysSound
             EditorGUILayout.PropertyField(slideVolMult);
 
             EditorGUILayout.Separator();
-           
+
             EditorGUILayout.PropertyField(collMask);
 
             EditorGUILayout.Separator();
@@ -161,7 +164,7 @@ namespace PhysSound
                         EditorGUI.indentLevel--;
 
                         aud.Slide = EditorGUILayout.ObjectField("Slide Clip", aud.Slide, typeof(AudioClip), true) as AudioClip;
-                        
+
                         GUILayout.Space(3);
                         GUILayout.EndVertical();
                     }

@@ -37,7 +37,7 @@ namespace PhysSound
             EditorGUILayout.Separator();
 
             //EditorGUILayout.LabelField("Use this editor to define your own Material Types for the PhysSound system.", EditorStyles.helpBox);
-            EditorGUILayout.HelpBox("You must click the 'Save to File' button before you close the window if you want to save your changes!", MessageType.Warning);
+            EditorGUILayout.HelpBox("You must click the 'Save' button before you close the window if you want to save your changes!", MessageType.Warning);
 
             GUILayout.Box("", GUILayout.MaxWidth(Screen.width), GUILayout.Height(dividerHeight));
 
@@ -94,7 +94,7 @@ namespace PhysSound
 
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
-
+            GUILayout.Space(5f);
             GUILayout.EndVertical();
 
             if (duplicateValBlock)
@@ -115,7 +115,7 @@ namespace PhysSound
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
 
-            if (GUILayout.Button("Save to File", GUILayout.MaxWidth(125)))
+            if (GUILayout.Button("Save", GUILayout.MaxWidth(125)))
             {
                 saveTypes();
                 savePoolSize();
@@ -125,9 +125,9 @@ namespace PhysSound
 
             GUI.enabled = true;
 
-            if (GUILayout.Button("Load from File", GUILayout.MaxWidth(125)))
+            if (GUILayout.Button("Revert", GUILayout.MaxWidth(125)))
             {
-                if (EditorUtility.DisplayDialog("Load From File?", "This will discard all currently unsaved changes.", "Continue", "Cancel"))
+                if (EditorUtility.DisplayDialog("Revert?", "This will discard all currently unsaved changes.", "Continue", "Cancel"))
                 {
                     loadTypes();
                     loadPoolSize();
@@ -139,7 +139,7 @@ namespace PhysSound
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
 
-            
+
         }
 
         #region Utility
@@ -206,7 +206,7 @@ namespace PhysSound
 
             sw.WriteLine("public static bool HasKey(int index) { return index < PhysSoundTypes.Length && index >= 0; }");
             sw.WriteLine("");
-            
+
             sw.WriteLine("}");
             sw.WriteLine("}");
 
