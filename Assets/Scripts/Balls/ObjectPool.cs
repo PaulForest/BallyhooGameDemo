@@ -11,13 +11,18 @@ namespace Balls
         [SerializeField] protected bool allowExpansion = true;
         [SerializeField] protected GameObject prefab;
 
-        public struct ObjectInstance
+        protected struct ObjectInstance
         {
             public T myComponent;
             public GameObject gameObject;
         }
 
+        public bool HasBallsInPlay => _numberOfNumberOfBallsInPlay > 0;
+
+        private int _numberOfNumberOfBallsInPlay;
+
         protected readonly List<ObjectInstance> pool = new List<ObjectInstance>();
+
 
         protected virtual void Awake()
         {
@@ -26,7 +31,7 @@ namespace Balls
             ExpandCapacity(initialCount);
         }
 
-        protected void ExpandCapacity(int newMaxCapacity)
+        private void ExpandCapacity(int newMaxCapacity)
         {
             var min = pool.Count;
             var max = newMaxCapacity + min;
@@ -53,8 +58,11 @@ namespace Balls
         {
             foreach (var instance in pool)
             {
+                instance.
                 instance.gameObject.SetActive(false);
             }
+
+            _numberOfNumberOfBallsInPlay = 0;
         }
 
 
@@ -72,6 +80,9 @@ namespace Balls
 
                 myInstance.gameObject.SetActive(true);
                 myInstance.myComponent.ResetNonStaticData();
+
+                _numberOfNumberOfBallsInPlay++;
+
                 return myInstance.myComponent;
             }
 
@@ -87,12 +98,17 @@ namespace Balls
             myInstance = pool[i];
             myInstance.gameObject.SetActive(true);
             myInstance.myComponent.ResetNonStaticData();
+
+
+            _numberOfNumberOfBallsInPlay++;
+
             return myInstance.myComponent;
         }
 
         public virtual void ReturnObject(GameObject go)
         {
             go.SetActive(false);
+            _numberOfNumberOfBallsInPlay--;
 
 #if UNITY_EDITOR
             if (!pool.Exists(instance => instance.gameObject == go))
