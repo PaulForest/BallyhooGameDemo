@@ -17,11 +17,7 @@ namespace Balls
             }
         }
 
-        public bool RecentlyReset => _recentlyReset;
-        
         private static PlayerBallManager _instance;
-        private bool _recentlyReset = true;
-
 
         private void Awake()
         {
@@ -36,7 +32,6 @@ namespace Balls
         private void OnLevelStart(LevelData arg0)
         {
             BallPool.Instance.ResetData();
-            _recentlyReset = true;
         }
     }
 }

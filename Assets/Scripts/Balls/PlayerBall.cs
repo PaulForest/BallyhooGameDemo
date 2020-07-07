@@ -26,6 +26,11 @@ namespace Balls
 
         private void OnDisable()
         {
+            _physSoundObject.SetEnabled(false);
+
+            // skip gameplay logic if we're just resetting this instance.
+            if (_recentlyReset) return;
+
             GlobalEvents.BallDestroyed?.Invoke(this);
 
             if (!BallPool.Instance.HasBallsInPlay)
@@ -33,7 +38,7 @@ namespace Balls
                 GlobalEvents.LastBallDestroyed?.Invoke();
             }
 
-            _physSoundObject.SetEnabled(false);
+
         }
 
         public void BeforeReset()

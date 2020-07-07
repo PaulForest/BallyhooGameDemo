@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -21,18 +22,26 @@ namespace Balls
 
         private int _numberOfNumberOfBallsInPlay;
 
-        protected readonly List<ObjectInstance> pool = new List<ObjectInstance>();
-
+        protected List<ObjectInstance> pool;
 
         protected virtual void Awake()
         {
-            pool.Clear();
+            pool = new List<ObjectInstance>(initialCount);
+        }
 
+        protected virtual void Start()
+        {
             ExpandCapacity(initialCount);
         }
 
         private void ExpandCapacity(int newMaxCapacity)
         {
+            if (!prefab)
+            {
+                Debug.LogError($"{this} I need a prefab set", this);
+                return;
+            }
+
             var min = pool.Count;
             var max = newMaxCapacity + min;
             for (var i = min; i < max; i++)
@@ -58,8 +67,9 @@ namespace Balls
         {
             foreach (var instance in pool)
             {
-                instance.
+                instance.myComponent.BeforeReset();
                 instance.gameObject.SetActive(false);
+                instance.myComponent.AfterReset();
             }
 
             _numberOfNumberOfBallsInPlay = 0;
