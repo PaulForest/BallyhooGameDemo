@@ -10,6 +10,7 @@ namespace Util
         public static void Reset()
         {
             BitMaskCollider.ResetStaticData();
+            BallPool.Instance.ResetData();
         }
 
         // private static Type[] _implementationsOfIResettableStaticData;

@@ -29,6 +29,8 @@ namespace PlayObjects
             {
                 GlobalEvents.FirstBallInGoal?.Invoke();
             }
+
+            BallPool.Instance.ReturnObject(ball.gameObject);
         }
 
         private void OnValidate()

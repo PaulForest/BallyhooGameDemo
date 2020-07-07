@@ -27,13 +27,8 @@ namespace Level
         {
             _instance = this;
 
-            // ResetAllStaticData.Reset();
-
             GlobalEvents.LastBallDestroyed.AddListener(OnLastBallDestroyed);
             GlobalEvents.FirstBallInGoal.AddListener(OnFirstBallInGoal);
-
-            // Ensure that this singleton exists, especially when running in-editor in a game scene.
-            // var a = GameController.Instance;
         }
 
         /// <summary>

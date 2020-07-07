@@ -13,17 +13,16 @@ namespace PlayObjects
         [Header("When this is unlocked, we create this many objects.")] 
         [SerializeField] private int explosionCount;
         [SerializeField] private bool useCollisionCountForExplosionCount = true;
-        
 
-        private Animation _animation;
+        // private Animation _animation;
 
         private void Awake()
         {
-            _animation = GetComponent<Animation>();
-            if (!_animation)
-            {
-                Debug.LogError($"{this}: I need an animation", this);
-            }
+            // _animation = GetComponent<Animation>();
+            // if (!_animation)
+            // {
+            //     Debug.LogError($"{this}: I need an animation", this);
+            // }
 
             if (useCollisionCountForExplosionCount)
             {
@@ -48,10 +47,10 @@ namespace PlayObjects
 
             if (collisionCount > 0)
             {
-                if (!_animation) return;
-                
-                _animation.Stop();
-                _animation.Play();
+                // if (!_animation) return;
+                //
+                // _animation.Stop();
+                // _animation.Play();
 
                 return;
             }
@@ -63,8 +62,7 @@ namespace PlayObjects
                     MyBitFieldMask = -1
                 }, 100,
                 0.1f);
-            // Destroy(go, 2f);
-            
+            Destroy(go, 2f);
 
             Destroy(gameObject);
         }

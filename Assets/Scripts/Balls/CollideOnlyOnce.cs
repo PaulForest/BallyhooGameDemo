@@ -50,8 +50,6 @@ namespace Balls
             }
 
             BitMaskCollider.lastBitFieldMask = collideOnlyOnceData.MyBitFieldMask;
-
-            name = $"Splitter: {collideOnlyOnceData.MyBitFieldMask}"; // TODO remove
         }
 
         private void OnCollisionEnter(Collision other)
@@ -77,22 +75,8 @@ namespace Balls
         public void SetYouCannotCollideWithMeT(TOnlyTouchOnce ball)
         {
             ball.mInteractedWithBitField |= collideOnlyOnceData.MyBitFieldMask;
-
-            name = $"Ball: {ball.mInteractedWithBitField}"; // TODO remove
         }
 
         public CollideOnlyOnceData GetData() => collideOnlyOnceData;
-
-        // public static CollideOnlyOnce<TOnlyTouchOnce, TUnityEvent> CreateFromData(CollideOnlyOnceData collideOnlyOnceData, GameObject go)
-        // {
-        //     var c = go.AddComponent<CollideOnlyOnce<TOnlyTouchOnce, TUnityEvent>>();
-        //     c._collideOnlyOnceData = collideOnlyOnceData;
-        //     return c;
-        // }
-        //
-        // public void UpdateFromData(CollideOnlyOnceData collideOnlyOnceData)
-        // {
-        //     _collideOnlyOnceData.MyBitFieldMask = collideOnlyOnceData.MyBitFieldMask;
-        // }
     }
 }

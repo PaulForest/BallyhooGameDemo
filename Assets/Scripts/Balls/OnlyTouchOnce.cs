@@ -30,9 +30,7 @@ namespace Balls
 
         public void UpdateCollideOnlyOnceDataFromExistingData(CollideOnlyOnceData collideOnlyOnceData)
         {
-            this.mInteractedWithBitField |= collideOnlyOnceData.MyBitFieldMask;
-
-            name = $"Ball: {mInteractedWithBitField}";// TODO remove
+            mInteractedWithBitField |= collideOnlyOnceData.MyBitFieldMask;
         }
 
         public void ResetNonStaticData()

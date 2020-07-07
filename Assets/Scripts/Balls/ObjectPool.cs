@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -22,11 +21,10 @@ namespace Balls
 
         private int _numberOfNumberOfBallsInPlay;
 
-        protected List<ObjectInstance> pool;
+        protected List<ObjectInstance> pool = new List<ObjectInstance>();
 
         protected virtual void Awake()
         {
-            pool = new List<ObjectInstance>(initialCount);
         }
 
         protected virtual void Start()
@@ -54,7 +52,10 @@ namespace Balls
                     break;
                 }
 
+                t.BeforeReset();
                 go.SetActive(false);
+                t.AfterReset();
+
                 pool.Add(new ObjectInstance
                 {
                     myComponent = t,
@@ -82,11 +83,11 @@ namespace Balls
             ObjectInstance myInstance;
 
             var currentPoolCount = pool.Count;
-            var i = 0;
+            int i;
             for (i = 0; i < currentPoolCount; i++)
             {
                 myInstance = pool[i];
-                if (myInstance.gameObject.activeSelf) continue;
+                if (!myInstance.gameObject || myInstance.gameObject.activeSelf) continue;
 
                 myInstance.gameObject.SetActive(true);
                 myInstance.myComponent.ResetNonStaticData();
@@ -109,7 +110,6 @@ namespace Balls
             myInstance.gameObject.SetActive(true);
             myInstance.myComponent.ResetNonStaticData();
 
-
             _numberOfNumberOfBallsInPlay++;
 
             return myInstance.myComponent;
@@ -119,6 +119,11 @@ namespace Balls
         {
             go.SetActive(false);
             _numberOfNumberOfBallsInPlay--;
+
+            if (_numberOfNumberOfBallsInPlay == 0)
+            {
+                GlobalEvents.LastBallDestroyed?.Invoke();
+            }
 
 #if UNITY_EDITOR
             if (!pool.Exists(instance => instance.gameObject == go))

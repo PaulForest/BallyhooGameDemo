@@ -32,13 +32,6 @@ namespace Balls
             if (_recentlyReset) return;
 
             GlobalEvents.BallDestroyed?.Invoke(this);
-
-            if (!BallPool.Instance.HasBallsInPlay)
-            {
-                GlobalEvents.LastBallDestroyed?.Invoke();
-            }
-
-
         }
 
         public void BeforeReset()
