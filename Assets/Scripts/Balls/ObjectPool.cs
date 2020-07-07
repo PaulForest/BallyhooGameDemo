@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -11,23 +12,36 @@ namespace Balls
         [SerializeField] protected bool allowExpansion = true;
         [SerializeField] protected GameObject prefab;
 
-        public struct ObjectInstance
+        protected struct ObjectInstance
         {
             public T myComponent;
             public GameObject gameObject;
         }
 
-        protected readonly List<ObjectInstance> pool = new List<ObjectInstance>();
+        public bool HasBallsInPlay => _numberOfNumberOfBallsInPlay > 0;
+
+        private int _numberOfNumberOfBallsInPlay;
+
+        protected List<ObjectInstance> pool;
 
         protected virtual void Awake()
         {
-            pool.Clear();
+            pool = new List<ObjectInstance>(initialCount);
+        }
 
+        protected virtual void Start()
+        {
             ExpandCapacity(initialCount);
         }
 
-        protected void ExpandCapacity(int newMaxCapacity)
+        private void ExpandCapacity(int newMaxCapacity)
         {
+            if (!prefab)
+            {
+                Debug.LogError($"{this} I need a prefab set", this);
+                return;
+            }
+
             var min = pool.Count;
             var max = newMaxCapacity + min;
             for (var i = min; i < max; i++)
@@ -53,8 +67,12 @@ namespace Balls
         {
             foreach (var instance in pool)
             {
+                instance.myComponent.BeforeReset();
                 instance.gameObject.SetActive(false);
+                instance.myComponent.AfterReset();
             }
+
+            _numberOfNumberOfBallsInPlay = 0;
         }
 
 
@@ -72,6 +90,9 @@ namespace Balls
 
                 myInstance.gameObject.SetActive(true);
                 myInstance.myComponent.ResetNonStaticData();
+
+                _numberOfNumberOfBallsInPlay++;
+
                 return myInstance.myComponent;
             }
 
@@ -87,12 +108,17 @@ namespace Balls
             myInstance = pool[i];
             myInstance.gameObject.SetActive(true);
             myInstance.myComponent.ResetNonStaticData();
+
+
+            _numberOfNumberOfBallsInPlay++;
+
             return myInstance.myComponent;
         }
 
         public virtual void ReturnObject(GameObject go)
         {
             go.SetActive(false);
+            _numberOfNumberOfBallsInPlay--;
 
 #if UNITY_EDITOR
             if (!pool.Exists(instance => instance.gameObject == go))

@@ -6,8 +6,8 @@ namespace Balls
     [RequireComponent(typeof(PhysSoundObject))]
     public class PlayerBall : OnlyTouchOnce, IPoolableObject
     {
-
         private PhysSoundObject _physSoundObject;
+        private bool _recentlyReset;
 
         private void Awake()
         {
@@ -17,28 +17,38 @@ namespace Balls
                 Debug.LogError($"{this}: I need a PhysSoundObject component", this);
             }
         }
-        
+
         private void OnEnable()
         {
-            NumberOfNumberOfBallsInPlay++;
             ResetOnlyTouchOnceData();
-            
             _physSoundObject.SetEnabled(true);
         }
 
         private void OnDisable()
         {
-            NumberOfNumberOfBallsInPlay--;
+            _physSoundObject.SetEnabled(false);
+
+            // skip gameplay logic if we're just resetting this instance.
+            if (_recentlyReset) return;
+
             GlobalEvents.BallDestroyed?.Invoke(this);
 
-            if (!HasBallsInPlay)
+            if (!BallPool.Instance.HasBallsInPlay)
             {
                 GlobalEvents.LastBallDestroyed?.Invoke();
             }
-            _physSoundObject.SetEnabled(false);
+
+
         }
 
-        private static bool HasBallsInPlay => NumberOfNumberOfBallsInPlay > 0;
-        private static int NumberOfNumberOfBallsInPlay { get; set; }
+        public void BeforeReset()
+        {
+            _recentlyReset = true;
+        }
+
+        public void AfterReset()
+        {
+            _recentlyReset = false;
+        }
     }
 }
