@@ -4,6 +4,16 @@ namespace Level
 {
     public class LevelView : MonoBehaviour
     {
+        public void ClickLevelStartButton()
+        {
+            GlobalEvents.LevelStart?.Invoke(Player.Instance.LastLevelPlayed);
+            levelStartGo.SetActive(false);
+        }
+
+        [SerializeField] private GameObject levelStartGo;
+        [SerializeField] private GameObject levelLostGo;
+        [SerializeField] private GameObject levelWonGo;
+
         private void Start()
         {
             GlobalEvents.LevelStart.AddListener(LevelStart);
@@ -20,17 +30,17 @@ namespace Level
 
         private void LevelLost(LevelData levelData)
         {
-            // throw new NotImplementedException();
+            levelLostGo.SetActive(true);
         }
 
         private void LevelWon(LevelData levelData)
         {
-//            throw new NotImplementedException();
+            levelWonGo.SetActive(true);
         }
 
         private void LevelStart(LevelData levelData)
         {
-            // throw new NotImplementedException();
+            levelStartGo.SetActive(true);
         }
     }
 }
