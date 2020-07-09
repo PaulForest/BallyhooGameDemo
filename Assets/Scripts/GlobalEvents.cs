@@ -19,6 +19,8 @@ public static class GlobalEvents
     public static readonly UnityLockedAreaEvent LockedAreaUnlocked = new UnityLockedAreaEvent();
 
     public static readonly UnityCameraEvent CameraChanged = new UnityCameraEvent();
+    
+    public static readonly  UnityEvent BackButtonPressed = new UnityEvent();
 }
 
 public class UnityLevelDataEvent : UnityEvent<LevelData>

@@ -1,4 +1,5 @@
-﻿using Balls;
+﻿using System;
+using Balls;
 using UnityEngine;
 
 namespace Level
@@ -61,6 +62,14 @@ namespace Level
             else
             {
                 GlobalEvents.LevelLost?.Invoke(CurrentLevelData);
+            }
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                
             }
         }
     }

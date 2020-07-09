@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Level
 {
@@ -18,16 +19,67 @@ namespace Level
         [SerializeField] private GameObject levelStartGo;
         [SerializeField] private GameObject levelLostGo;
         [SerializeField] private GameObject levelWonGo;
+        [SerializeField] private GameObject backMenuGo;
+
+        public enum CurrentStateEnum
+        {
+            None,
+            LevelStart,
+            NormalGameplay,
+            LevelLost,
+            LevelWon,
+            BackMenuOpen
+        }
+
+        public CurrentStateEnum CurrentState
+        {
+            get => _currentState;
+            set
+            {
+                if (_currentState == value)
+                {
+                    return;
+                }
+
+                _currentState = value;
+
+                levelStartGo.SetActive(_currentState == CurrentStateEnum.LevelStart);
+                levelLostGo.SetActive(_currentState == CurrentStateEnum.LevelLost);
+                levelWonGo.SetActive(_currentState == CurrentStateEnum.LevelWon);
+                backMenuGo.SetActive(_currentState == CurrentStateEnum.BackMenuOpen);
+            }
+        }
+
+        private CurrentStateEnum _currentState;
 
         private void Start()
         {
             GlobalEvents.LevelStart.AddListener(LevelStart);
             GlobalEvents.LevelWon.AddListener(LevelWon);
             GlobalEvents.LevelLost.AddListener(LevelLost);
+            GlobalEvents.BackButtonPressed.AddListener(OnBackButtonPressed);
 
-            levelStartGo.SetActive(true);
-            levelLostGo.SetActive(false);
-            levelWonGo.SetActive(false);
+            CurrentState = CurrentStateEnum.LevelStart;
+        }
+
+        public void OnBackButtonPressed()
+        {
+            switch (CurrentState)
+            {
+                case CurrentStateEnum.BackMenuOpen:
+                    CurrentState = CurrentStateEnum.NormalGameplay;
+                    Time.timeScale = 1;
+                    break;
+                case CurrentStateEnum.NormalGameplay:
+                    CurrentState = CurrentStateEnum.BackMenuOpen;
+                    Time.timeScale = 0;
+                    break;
+            }
+        }
+
+        public void OnClickQuitButton()
+        {
+            GameController.Instance.BackToMainMenu();
         }
 
         private void OnDestroy()

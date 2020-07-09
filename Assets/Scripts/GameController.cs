@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Level;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -71,6 +70,17 @@ public class GameController : MonoBehaviour
         GlobalEvents.BeforeLevelStart?.Invoke(levelData);
     }
 
+    public void BackToMainMenu()
+    {
+        LevelController.Instance.HaltExecution();
+        ResetAllStaticData.Reset();
+
+        SceneManager.LoadScene(0);
+
+        Time.timeScale = 1;
+    }
+
+
     private void OnLevelWon(LevelData levelData)
     {
         ResetAllStaticData.Reset();
@@ -84,17 +94,8 @@ public class GameController : MonoBehaviour
 
     private void OnLevelLost(LevelData levelData)
     {
-        StartCoroutine(OnLevelLostCoroutine());
-    }
-
-    private IEnumerator OnLevelLostCoroutine()
-    {
         ResetAllStaticData.Reset();
         LevelController.Instance.HaltExecution();
-
-        yield return new WaitForSeconds(3);
-
-        StartLevel(Player.Instance.LastLevelPlayed);
     }
 
     private void OnDestroy()
