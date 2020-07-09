@@ -13,7 +13,7 @@ namespace PlayObjects
         [SerializeField] public CollideOnlyOnceData collideOnlyOnceData;
         [SerializeField] public int spawnCount = 1;
         [SerializeField] public float radius = 0.1f;
-
+        
         public static BallSpawnPoint AddNewInstance(GameObject go,
             Vector3 pos, CollideOnlyOnceData collideOnlyOnceData, int spawnCount, float radius)
         {

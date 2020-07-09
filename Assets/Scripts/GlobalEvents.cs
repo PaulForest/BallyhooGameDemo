@@ -7,6 +7,8 @@ using UnityEngine.Events;
 public static class GlobalEvents
 {
     public static readonly UnityEvent MainMenuShown = new UnityEvent();
+    
+    public static readonly UnityLevelDataEvent BeforeLevelStart = new UnityLevelDataEvent();
     public static readonly UnityLevelDataEvent LevelStart = new UnityLevelDataEvent();
     public static readonly UnityLevelDataEvent LevelWon = new UnityLevelDataEvent();
     public static readonly UnityLevelDataEvent LevelLost = new UnityLevelDataEvent();

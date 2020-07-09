@@ -10,6 +10,11 @@ namespace Level
             levelStartGo.SetActive(false);
         }
 
+        public void ClickLevelWonButton()
+        {
+            GameController.Instance.StartNextLevel();
+        }
+
         [SerializeField] private GameObject levelStartGo;
         [SerializeField] private GameObject levelLostGo;
         [SerializeField] private GameObject levelWonGo;
@@ -19,6 +24,10 @@ namespace Level
             GlobalEvents.LevelStart.AddListener(LevelStart);
             GlobalEvents.LevelWon.AddListener(LevelWon);
             GlobalEvents.LevelLost.AddListener(LevelLost);
+
+            levelStartGo.SetActive(true);
+            levelLostGo.SetActive(false);
+            levelWonGo.SetActive(false);
         }
 
         private void OnDestroy()

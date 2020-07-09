@@ -21921,7 +21921,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: BallSpawnPoint
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1359237377, guid: e8ad41953ab22a3418cffe6a506f380a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e8ad41953ab22a3418cffe6a506f380a, type: 3}
 --- !u!43 &1007972883
 Mesh:

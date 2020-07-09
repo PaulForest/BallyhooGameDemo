@@ -43,9 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 954725045ffd4225989f8f934993b9ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelStart: 0
-  levelWon: 0
-  levelLost: 0
+  levelStart: 1
+  levelWon: 1
+  levelLost: 1
   ballDestroyed: 0
   ballSplit: 0
   lastBallDestroyed: 0

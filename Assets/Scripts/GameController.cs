@@ -24,6 +24,11 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void StartNextLevel()
+    {
+        StartLevel(Player.Instance.LastLevelPlayed);
+    }
+
     private static GameController _instance;
 
     private void Awake()
@@ -59,34 +64,22 @@ public class GameController : MonoBehaviour
         ResetAllStaticData.Reset();
 
         yield return SceneManager.LoadSceneAsync(levelData.buildIndex);
-        // yield return SceneManager.LoadSceneAsync(levelData.buildIndex, LoadSceneMode.Additive);
 
         var player = Player.Instance;
         var levelController = LevelController.Instance;
 
-        GlobalEvents.LevelStart?.Invoke(levelData);
+        GlobalEvents.BeforeLevelStart?.Invoke(levelData);
     }
 
     private void OnLevelWon(LevelData levelData)
-    {
-        StartCoroutine(OnLevelWonCoroutine());
-    }
-
-    private IEnumerator OnLevelWonCoroutine()
     {
         ResetAllStaticData.Reset();
         LevelController.Instance.HaltExecution();
 
         var player = Player.Instance;
 
-        // yield return SceneManager.UnloadSceneAsync(player.LastLevelPlayed.buildIndex);
-
         player.LastLevelPlayed = LevelList.Instance.GetNextLevelData();
         player.SaveData();
-
-        yield return new WaitForSeconds(3);
-
-        StartLevel(player.LastLevelPlayed);
     }
 
     private void OnLevelLost(LevelData levelData)
