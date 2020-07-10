@@ -1,4 +1,4 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Level
@@ -21,9 +21,9 @@ namespace Level
         [SerializeField] private GameObject levelWonGo;
         [SerializeField] private GameObject backMenuGo;
 
-        public enum CurrentStateEnum
+        private enum CurrentStateEnum
         {
-            None,
+            [UsedImplicitly] None,
             LevelStart,
             NormalGameplay,
             LevelLost,
@@ -31,7 +31,7 @@ namespace Level
             BackMenuOpen
         }
 
-        public CurrentStateEnum CurrentState
+        private CurrentStateEnum CurrentState
         {
             get => _currentState;
             set
