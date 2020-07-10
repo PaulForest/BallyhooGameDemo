@@ -2088,7 +2088,7 @@ GameObject:
   - component: {fileID: 6343185839864659605}
   - component: {fileID: 6343185839864659604}
   m_Layer: 5
-  m_Name: LevelViewFrontCanvas
+  m_Name: LevelView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2189,10 +2189,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f874902a1947bc912c915891d7d3ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  simplePromptPrefab: {fileID: 1581548992922632162, guid: dae5fc3d55294914f847af7c82ef926d,
+    type: 3}
+  simplePromptOptionPrefab: {fileID: 7573294166991097776, guid: 6210df6e2e6fefd44afab97cf2c2ff40,
+    type: 3}
   levelStartGo: {fileID: 5399268875625988458}
   levelLostGo: {fileID: 8526641780063433944}
   levelWonGo: {fileID: 6357526141657299251}
-  backMenuGo: {fileID: 3884059370417276}
 --- !u!1 &6343185840152639421
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,10 +1,15 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
+using UI;
 using UnityEngine;
 
 namespace Level
 {
     public class LevelView : MonoBehaviour
     {
+        [SerializeField] private SimplePrompt simplePromptPrefab;
+        [SerializeField] private SimplePromptOption simplePromptOptionPrefab;
+        
         public void ClickLevelStartButton()
         {
             GlobalEvents.LevelStart?.Invoke(Player.Instance.LastLevelPlayed);
@@ -19,7 +24,6 @@ namespace Level
         [SerializeField] private GameObject levelStartGo;
         [SerializeField] private GameObject levelLostGo;
         [SerializeField] private GameObject levelWonGo;
-        [SerializeField] private GameObject backMenuGo;
 
         private enum CurrentStateEnum
         {
@@ -27,8 +31,7 @@ namespace Level
             LevelStart,
             NormalGameplay,
             LevelLost,
-            LevelWon,
-            BackMenuOpen
+            LevelWon
         }
 
         private CurrentStateEnum CurrentState
@@ -46,7 +49,6 @@ namespace Level
                 levelStartGo.SetActive(_currentState == CurrentStateEnum.LevelStart);
                 levelLostGo.SetActive(_currentState == CurrentStateEnum.LevelLost);
                 levelWonGo.SetActive(_currentState == CurrentStateEnum.LevelWon);
-                backMenuGo.SetActive(_currentState == CurrentStateEnum.BackMenuOpen);
             }
         }
 
@@ -62,19 +64,32 @@ namespace Level
             CurrentState = CurrentStateEnum.LevelStart;
         }
 
-        public void OnBackButtonPressed()
+        public async void OnBackButtonPressed()
         {
-            switch (CurrentState)
-            {
-                case CurrentStateEnum.BackMenuOpen:
-                    CurrentState = CurrentStateEnum.NormalGameplay;
-                    Time.timeScale = 1;
-                    break;
-                case CurrentStateEnum.NormalGameplay:
-                    CurrentState = CurrentStateEnum.BackMenuOpen;
-                    Time.timeScale = 0;
-                    break;
-            }
+            GlobalEvents.BackButtonPressed.RemoveListener(OnBackButtonPressed); // Re-add this later
+            
+            var prompt = SimplePrompt.Spawn(simplePromptPrefab, simplePromptOptionPrefab, "Back to Main Menu?",
+                new List<SimplePromptOptionData>
+                {
+                    new SimplePromptOptionData
+                    {
+                        buttonText = "Resume",
+                        simplePromptCallback = OnResumeGame
+                    },
+                    new SimplePromptOptionData
+                    {
+                        buttonText = "Quit Level",
+                        simplePromptCallback = () => GameController.Instance.BackToMainMenu()
+                    }
+                }
+            );
+
+            await prompt;
+        }
+
+        private void OnResumeGame()
+        {
+            
         }
 
         public void OnClickQuitButton()

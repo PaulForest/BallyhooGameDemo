@@ -13,7 +13,7 @@ public class MainMenu : MonoBehaviour
 
     private void OnBackButtonPressed()
     {
-        SimplePrompt.Spawn();
+        // SimplePrompt.Spawn();
 
     }
 

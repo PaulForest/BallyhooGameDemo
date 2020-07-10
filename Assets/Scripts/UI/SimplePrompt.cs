@@ -1,46 +1,56 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace UI
 {
-    public delegate void SimplePromptCallback();
-
-    public class SimplePromptOption
+    [Serializable]
+    public class SimplePromptOptionData
     {
-        public string label;
-        public SimplePromptCallback simplePromptCallback;
+        public string buttonText;
+        public UnityAction simplePromptCallback;
     }
 
     public class SimplePrompt : MonoBehaviour
     {
         [SerializeField] private string title;
-        [SerializeField] private List<SimplePromptOption> options;
+        [SerializeField] private List<SimplePromptOptionData> options;
 
-        [SerializeField] private Button iOSBackButton;
+        [SerializeField] private Button backButton;
+        [SerializeField] private GameObject buttonParentGo;
 
-        public static SimplePrompt Spawn(SimplePrompt prefab, string title,
-            List<SimplePromptOption> simplePromptOptions)
+        [SerializeField] private SimplePromptOption simplePromptOptionPrefab;
+
+        private readonly List<SimplePromptOption> _simplePromptOptions = new List<SimplePromptOption>();
+
+        public static Task<SimplePrompt> Spawn(SimplePrompt prefab, SimplePromptOption simplePromptOptionPrefab,
+            string title, List<SimplePromptOptionData> simplePromptOptionDataList)
         {
             var go = Instantiate(prefab);
             var prompt = go.GetComponent<SimplePrompt>();
             prompt.title = title;
-            prompt.options = simplePromptOptions;
-            return prompt;
+            prompt.options = simplePromptOptionDataList;
+
+            foreach (var simplePromptOptionData in prompt.options)
+            {
+                var optionGo = Instantiate(simplePromptOptionPrefab);
+                optionGo.label.text = simplePromptOptionData.buttonText;
+                optionGo.button.onClick.AddListener(simplePromptOptionData.simplePromptCallback);
+
+                prompt._simplePromptOptions.Add(optionGo);
+            }
+
+            return Task.FromResult(prompt);
         }
 
         private void Awake()
         {
             GlobalEvents.BackButtonPressed.AddListener(GlobalOnBackButtonPressed);
 
-            iOSBackButton.enabled = true;
-            iOSBackButton.onClick.AddListener(LocalBackButtonPressed);
-
-            iOSBackButtonGo.SetActive(false);
-#if UNITY_IOS
-#else
-#endif
+            backButton.onClick.AddListener(LocalBackButtonPressed);
         }
 
         private void LocalBackButtonPressed()
@@ -51,10 +61,15 @@ namespace UI
         private void OnDestroy()
         {
             GlobalEvents.BackButtonPressed.RemoveListener(GlobalOnBackButtonPressed);
+            foreach (var simplePromptOption in _simplePromptOptions)
+            {
+                simplePromptOption.button.onClick.RemoveAllListeners();
+            }
         }
 
         private void GlobalOnBackButtonPressed()
         {
+            Destroy(gameObject);
         }
     }
 }
