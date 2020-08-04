@@ -6,11 +6,13 @@ namespace PlayObjects
     [RequireComponent(typeof(CollideOnlyOncePlayerBall))]
     public class GoalArea : MonoBehaviour
     {
+        [SerializeField] private CollideOnlyOncePlayerBall collideOnlyOnce;
         public static int NumberOfBallsInGoal { get; private set; }
 
-        public static bool HasBallsInGoal() => NumberOfBallsInGoal > 0;
-
-        [SerializeField] private CollideOnlyOncePlayerBall collideOnlyOnce;
+        public static bool HasBallsInGoal()
+        {
+            return NumberOfBallsInGoal > 0;
+        }
 
         private void Start()
         {
@@ -25,10 +27,7 @@ namespace PlayObjects
 
             NumberOfBallsInGoal++;
 
-            if (NumberOfBallsInGoal == 1)
-            {
-                GlobalEvents.FirstBallInGoal?.Invoke();
-            }
+            if (NumberOfBallsInGoal == 1) GlobalEvents.FirstBallInGoal?.Invoke();
 
             BallPool.Instance.ReturnObject(ball.gameObject);
         }
@@ -36,9 +35,7 @@ namespace PlayObjects
         private void OnValidate()
         {
             if (!GetComponent<CollideOnlyOncePlayerBall>())
-            {
                 collideOnlyOnce = gameObject.AddComponent<CollideOnlyOncePlayerBall>();
-            }
         }
     }
 }

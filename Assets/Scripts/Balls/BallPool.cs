@@ -5,6 +5,8 @@ namespace Balls
 {
     public class BallPool : ObjectPool<PlayerBall>
     {
+        private static BallPool _instance;
+
         public static BallPool Instance
         {
             get
@@ -16,8 +18,6 @@ namespace Balls
                 return _instance;
             }
         }
-
-        private static BallPool _instance;
 
         protected override void Awake()
         {
@@ -46,10 +46,7 @@ namespace Balls
             GlobalEvents.LevelWon.RemoveListener(OnLevelChanged);
             GlobalEvents.LevelLost.RemoveListener(OnLevelChanged);
 
-            foreach (var myInstance in pool)
-            {
-                Destroy(myInstance.gameObject);
-            }
+            foreach (var myInstance in pool) Destroy(myInstance.gameObject);
 
             pool.Clear();
         }

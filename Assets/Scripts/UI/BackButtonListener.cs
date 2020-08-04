@@ -4,6 +4,8 @@ namespace UI
 {
     public class BackButtonListener : MonoBehaviour
     {
+        private static BackButtonListener _instance;
+
         public static BackButtonListener Instance
         {
             get
@@ -16,8 +18,6 @@ namespace UI
             }
         }
 
-        private static BackButtonListener _instance;
-
         private void Awake()
         {
             if (_instance && _instance != this)
@@ -27,17 +27,14 @@ namespace UI
             }
 
             _instance = this;
-            
+
             DontDestroyOnLoad(gameObject);
         }
 
 #if UNITY_ANDROID
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                GlobalEvents.BackButtonPressed?.Invoke();
-            }
+            if (Input.GetKeyDown(KeyCode.Escape)) GlobalEvents.BackButtonPressed?.Invoke();
         }
 #endif
     }

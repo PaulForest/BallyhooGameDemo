@@ -8,10 +8,11 @@ namespace PlayObjects
     public class LockedArea : MonoBehaviour
     {
         [SerializeField] private int collisionCount;
-        [SerializeField] private TMP_Text splitCountLabel;
 
-        [Header("When this is unlocked, we create this many objects.")] 
-        [SerializeField] private int explosionCount;
+        [Header("When this is unlocked, we create this many objects.")] [SerializeField]
+        private int explosionCount;
+
+        [SerializeField] private TMP_Text splitCountLabel;
         [SerializeField] private bool useCollisionCountForExplosionCount = true;
 
         // private Animation _animation;
@@ -24,10 +25,7 @@ namespace PlayObjects
             //     Debug.LogError($"{this}: I need an animation", this);
             // }
 
-            if (useCollisionCountForExplosionCount)
-            {
-                explosionCount = collisionCount;
-            }
+            if (useCollisionCountForExplosionCount) explosionCount = collisionCount;
         }
 
         private void Start()
@@ -46,14 +44,12 @@ namespace PlayObjects
             splitCountLabel.text = collisionCount.ToString();
 
             if (collisionCount > 0)
-            {
                 // if (!_animation) return;
                 //
                 // _animation.Stop();
                 // _animation.Play();
 
                 return;
-            }
 
             GlobalEvents.LockedAreaUnlocked?.Invoke(this);
             var go = new GameObject("Explosion");

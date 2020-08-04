@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Util;
 
-[RequireComponent((typeof(DontDestroyOnLoad)))]
+[RequireComponent(typeof(DontDestroyOnLoad))]
 public class GameController : MonoBehaviour
 {
+    private static GameController _instance;
+
     public static GameController Instance
     {
         get
@@ -27,8 +29,6 @@ public class GameController : MonoBehaviour
     {
         StartLevel(Player.Instance.LastLevelPlayed);
     }
-
-    private static GameController _instance;
 
     private void Awake()
     {

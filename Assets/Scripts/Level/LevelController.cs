@@ -1,11 +1,14 @@
-﻿using System;
-using Balls;
+﻿using Balls;
 using UnityEngine;
 
 namespace Level
 {
     public class LevelController : MonoBehaviour
     {
+        private static LevelController _instance;
+
+        private bool _isPlayerWinning;
+
         public static LevelController Instance
         {
             get
@@ -19,9 +22,6 @@ namespace Level
             }
         }
 
-        private static LevelController _instance;
-
-        private bool _isPlayerWinning;
         private LevelData CurrentLevelData { get; }
 
         private void Start()
@@ -33,7 +33,7 @@ namespace Level
         }
 
         /// <summary>
-        /// Stops everything related to gameplay for this level
+        ///     Stops everything related to gameplay for this level
         /// </summary>
         public void HaltExecution()
         {
@@ -56,20 +56,15 @@ namespace Level
         private void OnLastBallDestroyed()
         {
             if (_isPlayerWinning)
-            {
                 GlobalEvents.LevelWon?.Invoke(CurrentLevelData);
-            }
             else
-            {
                 GlobalEvents.LevelLost?.Invoke(CurrentLevelData);
-            }
         }
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                
             }
         }
     }

@@ -15,13 +15,9 @@ namespace PlayObjects
         {
             var playerBall = other.GetComponent<PlayerBall>();
             if (playerBall)
-            {
                 BallPool.Instance.ReturnObject(playerBall.gameObject);
-            }
             else
-            {
                 Destroy(other.gameObject);
-            }
         }
 
         private void OnValidate()
@@ -34,13 +30,9 @@ namespace PlayObjects
 
             var b = GetComponent<Collider>();
             if (!b)
-            {
                 Debug.LogError("I need a collider of some kind", this);
-            }
             else
-            {
                 b.isTrigger = true;
-            }
         }
     }
 }

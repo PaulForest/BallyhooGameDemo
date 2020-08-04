@@ -7,10 +7,11 @@ namespace PlayObjects
     [RequireComponent(typeof(CollideOnlyOncePlayerBall), typeof(TMP_Text))]
     public class BallSplitter : MonoBehaviour
     {
+        [SerializeField] private CollideOnlyOncePlayerBall collideOnlyOnce;
+
         [Header("How many balls will this create?")] [SerializeField]
         protected int mSplitCount;
 
-        [SerializeField] private CollideOnlyOncePlayerBall collideOnlyOnce;
         [SerializeField] private TMP_Text splitCountLabel;
 
         private void Start()
@@ -42,10 +43,10 @@ namespace PlayObjects
         }
 
         /// <summary>
-        /// Clones the <see cref="originalBall"/> <see cref="mSplitCount"/> times.
-        /// We're doing the splits, and there are balls around.  There's a Jean-Claude Van Damme joke in there somewhere. :)
+        ///     Clones the <see cref="originalBall" /> <see cref="mSplitCount" /> times.
+        ///     We're doing the splits, and there are balls around.  There's a Jean-Claude Van Damme joke in there somewhere. :)
         /// </summary>
-        /// <param name="originalBall"/>
+        /// <param name="originalBall" />
         private void DoTheSplits(PlayerBall originalBall)
         {
             collideOnlyOnce.SetYouCannotCollideWithMeT(originalBall);

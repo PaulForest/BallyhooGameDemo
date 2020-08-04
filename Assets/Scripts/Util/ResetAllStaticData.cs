@@ -5,7 +5,7 @@ namespace Util
     public static class ResetAllStaticData
     {
         /// <summary>
-        /// Reset anything that has static data
+        ///     Reset anything that has static data
         /// </summary>
         public static void Reset()
         {

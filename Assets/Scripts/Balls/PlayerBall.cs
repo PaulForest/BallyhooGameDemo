@@ -9,6 +9,16 @@ namespace Balls
         private PhysSoundObject _physSoundObject;
         private bool _recentlyReset;
 
+        public void BeforeReset()
+        {
+            _recentlyReset = true;
+        }
+
+        public void AfterReset()
+        {
+            _recentlyReset = false;
+        }
+
         private void Awake()
         {
             _physSoundObject = GetComponent<PhysSoundObject>();
@@ -32,16 +42,6 @@ namespace Balls
             if (_recentlyReset) return;
 
             GlobalEvents.BallDestroyed?.Invoke(this);
-        }
-
-        public void BeforeReset()
-        {
-            _recentlyReset = true;
-        }
-
-        public void AfterReset()
-        {
-            _recentlyReset = false;
         }
     }
 }

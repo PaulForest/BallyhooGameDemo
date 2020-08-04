@@ -9,23 +9,6 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(DontDestroyOnLoad), typeof(AudioSource), typeof(AudioLowPassFilter))]
 public class MusicPlayer : MonoBehaviour
 {
-    [SerializeField] private List<AudioClip> titleMusic;
-    [SerializeField] private List<AudioClip> gameplayMusic;
-    [SerializeField] private List<AudioClip> bossMusic;
-
-    private AudioSource _audioSource;
-    private AudioLowPassFilter _audioLowPassFilter;
-
-    private bool _isTransitioning;
-    private bool _isDistorting;
-
-    public float transitionTimeSeconds = 1;
-
-    private float _distortionStartingVolume;
-
-    public static MusicPlayer Instance => _instance;
-    private static MusicPlayer _instance;
-
     public enum MusicType
     {
         None,
@@ -34,17 +17,33 @@ public class MusicPlayer : MonoBehaviour
         Boss
     }
 
+    private AudioLowPassFilter _audioLowPassFilter;
+
+    private AudioSource _audioSource;
+
+    private float _distortionStartingVolume;
+    private bool _isDistorting;
+
+    private bool _isTransitioning;
+
     private MusicType _lastPlayed = MusicType.None;
+    [SerializeField] private List<AudioClip> bossMusic;
+    [SerializeField] private List<AudioClip> gameplayMusic;
+    [SerializeField] private List<AudioClip> titleMusic;
+
+    public float transitionTimeSeconds = 1;
+
+    public static MusicPlayer Instance { get; private set; }
 
     private void Awake()
     {
-        if (_instance && _instance != this)
+        if (Instance && Instance != this)
         {
             DestroyImmediate(gameObject);
             return;
         }
 
-        _instance = this;
+        Instance = this;
 
         _audioSource = GetComponent<AudioSource>();
         if (!_audioSource) Debug.LogError("I need an AudioSource attached to me", this);
@@ -79,13 +78,9 @@ public class MusicPlayer : MonoBehaviour
         TurnDistortionOff();
 
         if (levelData.isBoss)
-        {
             PlayBossMusic();
-        }
         else
-        {
             PlayGameplayMusic();
-        }
     }
 
     public void PlayTitleMusic()
@@ -152,10 +147,7 @@ public class MusicPlayer : MonoBehaviour
 
     private IEnumerator PlayMusicCo(AudioClip clip)
     {
-        while (_isTransitioning)
-        {
-            yield return null;
-        }
+        while (_isTransitioning) yield return null;
 
         _isTransitioning = true;
 
@@ -164,9 +156,7 @@ public class MusicPlayer : MonoBehaviour
         if (_audioSource.isPlaying)
         {
             for (var t = 0f; t < transitionTimeSeconds; t += transitionTimePerFrame)
-            {
                 _audioSource.volume = Mathf.Lerp(startingVolume, 0, t);
-            }
 
             _audioSource.Stop();
         }
@@ -175,9 +165,7 @@ public class MusicPlayer : MonoBehaviour
         _audioSource.Play();
 
         for (var t = 0f; t < transitionTimeSeconds; t += transitionTimePerFrame)
-        {
             _audioSource.volume = Mathf.Lerp(0, startingVolume, t);
-        }
 
         _isTransitioning = false;
     }

@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public static class GlobalEvents
 {
     public static readonly UnityEvent MainMenuShown = new UnityEvent();
-    
+
     public static readonly UnityLevelDataEvent BeforeLevelStart = new UnityLevelDataEvent();
     public static readonly UnityLevelDataEvent LevelStart = new UnityLevelDataEvent();
     public static readonly UnityLevelDataEvent LevelWon = new UnityLevelDataEvent();
@@ -19,13 +19,12 @@ public static class GlobalEvents
     public static readonly UnityLockedAreaEvent LockedAreaUnlocked = new UnityLockedAreaEvent();
 
     public static readonly UnityCameraEvent CameraChanged = new UnityCameraEvent();
-    
-    public static readonly  UnityEvent BackButtonPressed = new UnityEvent();
+
+    public static readonly UnityEvent BackButtonPressed = new UnityEvent();
 }
 
 public class UnityLevelDataEvent : UnityEvent<LevelData>
 {
-
 }
 
 public class UnityPlayerBallEvent : UnityEvent<PlayerBall>

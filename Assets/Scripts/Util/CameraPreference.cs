@@ -27,12 +27,11 @@ namespace Util
 
         private Camera MyCamera { get; set; }
 
-        public static Camera GetPreferredOption => _preferredChoice && _preferredChoice.MyCamera
-            ? _preferredChoice.MyCamera
+        public static Camera GetPreferredOption => PreferredChoice && PreferredChoice.MyCamera
+            ? PreferredChoice.MyCamera
             : null;
 
-        public static CameraPreference PreferredChoice => _preferredChoice;
-        private static CameraPreference _preferredChoice;
+        public static CameraPreference PreferredChoice { get; private set; }
 
         private void Awake()
         {
@@ -48,14 +47,11 @@ namespace Util
 
         private void Start()
         {
-            var oldChoice = _preferredChoice;
+            var oldChoice = PreferredChoice;
             var newChoice = MakeChoice();
-            _preferredChoice = newChoice;
+            PreferredChoice = newChoice;
 
-            if (newChoice != oldChoice)
-            {
-                GlobalEvents.CameraChanged?.Invoke(newChoice.MyCamera);
-            }
+            if (newChoice != oldChoice) GlobalEvents.CameraChanged?.Invoke(newChoice.MyCamera);
         }
 
         protected CameraPreference MakeChoice()
@@ -68,7 +64,7 @@ namespace Util
                     newChoice = this;
                     break;
                 case CameraSelectionBehaviour.NoPreference:
-                    return _preferredChoice;
+                    return PreferredChoice;
             }
 
             foreach (var c in FindObjectsOfType<CameraPreference>())
@@ -92,10 +88,10 @@ namespace Util
             if (newChoice == null)
             {
                 Debug.LogError($"{this} Something is wrong, couldn't set the preferred choice");
-                return _preferredChoice;
+                return PreferredChoice;
             }
 
-            _preferredChoice = newChoice;
+            PreferredChoice = newChoice;
 
             return newChoice;
         }

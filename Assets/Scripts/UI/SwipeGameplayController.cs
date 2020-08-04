@@ -4,25 +4,26 @@ using Util;
 namespace UI
 {
     /// <summary>
-    /// Rotates the camera slightly to the left or right, and changes the gravity to turn slightly to the left or right
+    ///     Rotates the camera slightly to the left or right, and changes the gravity to turn slightly to the left or right
     /// </summary>
     public class SwipeGameplayController : MonoBehaviour
     {
-        [Header("Changes to the camera in response to the slider's value")] [SerializeField]
-        private Vector3 minCameraAngle;
+        [HideInInspector] private float _currentValue = 0.5f;
+
+        [HideInInspector] private float _dx;
+        [HideInInspector] private int _screenWidth;
 
         [SerializeField] private Vector3 maxCameraAngle;
-        [SerializeField] private Camera shiftCamera;
+
+        [SerializeField] private Vector3 maxGravityAngle;
+
+        [Header("Changes to the camera in response to the slider's value")] [SerializeField]
+        private Vector3 minCameraAngle;
 
         [Header("Change to gravity in response to the slider's value")] [SerializeField]
         private Vector3 minGravityAngle;
 
-        [SerializeField] private Vector3 maxGravityAngle;
-
-        [HideInInspector] private float _currentValue = 0.5f;
-        [HideInInspector] private int _screenWidth;
-
-        [HideInInspector] private float _dx;
+        [SerializeField] private Camera shiftCamera;
 
         private void Awake()
         {

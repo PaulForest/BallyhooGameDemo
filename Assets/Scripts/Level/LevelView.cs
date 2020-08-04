@@ -1,26 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Level
 {
     public class LevelView : MonoBehaviour
     {
-        public void ClickLevelStartButton()
-        {
-            GlobalEvents.LevelStart?.Invoke(Player.Instance.LastLevelPlayed);
-            levelStartGo.SetActive(false);
-        }
-
-        public void ClickLevelWonButton()
-        {
-            GameController.Instance.StartNextLevel();
-        }
-
-        [SerializeField] private GameObject levelStartGo;
-        [SerializeField] private GameObject levelLostGo;
-        [SerializeField] private GameObject levelWonGo;
-        [SerializeField] private GameObject backMenuGo;
-
         public enum CurrentStateEnum
         {
             None,
@@ -31,15 +14,19 @@ namespace Level
             BackMenuOpen
         }
 
+        private CurrentStateEnum _currentState;
+        [SerializeField] private GameObject backMenuGo;
+        [SerializeField] private GameObject levelLostGo;
+
+        [SerializeField] private GameObject levelStartGo;
+        [SerializeField] private GameObject levelWonGo;
+
         public CurrentStateEnum CurrentState
         {
             get => _currentState;
             set
             {
-                if (_currentState == value)
-                {
-                    return;
-                }
+                if (_currentState == value) return;
 
                 _currentState = value;
 
@@ -50,7 +37,16 @@ namespace Level
             }
         }
 
-        private CurrentStateEnum _currentState;
+        public void ClickLevelStartButton()
+        {
+            GlobalEvents.LevelStart?.Invoke(Player.Instance.LastLevelPlayed);
+            levelStartGo.SetActive(false);
+        }
+
+        public void ClickLevelWonButton()
+        {
+            GameController.Instance.StartNextLevel();
+        }
 
         private void Start()
         {

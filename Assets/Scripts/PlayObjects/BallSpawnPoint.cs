@@ -7,13 +7,14 @@ namespace PlayObjects
 {
     public class BallSpawnPoint : MonoBehaviour
     {
+        [SerializeField] public CollideOnlyOnceData collideOnlyOnceData;
+
         [Header("At most, this many balls will be generated per frame")] [SerializeField]
         private int maxBallsToGeneratePerFrame = 5;
 
-        [SerializeField] public CollideOnlyOnceData collideOnlyOnceData;
-        [SerializeField] public int spawnCount = 1;
         [SerializeField] public float radius = 0.1f;
-        
+        [SerializeField] public int spawnCount = 1;
+
         public static BallSpawnPoint AddNewInstance(GameObject go,
             Vector3 pos, CollideOnlyOnceData collideOnlyOnceData, int spawnCount, float radius)
         {
@@ -44,7 +45,7 @@ namespace PlayObjects
                 var newBall = ballPool.GetAvailableObject();
                 if (null == newBall)
                 {
-                    Debug.LogError($"Could not get a new object from the pool");
+                    Debug.LogError("Could not get a new object from the pool");
                     break;
                 }
 
@@ -58,10 +59,7 @@ namespace PlayObjects
                     newPos *= radius * 2;
                     newPos += transform.position;
 
-                    if (!Physics.CheckSphere(newPos, radius, layerMask))
-                    {
-                        break;
-                    }
+                    if (!Physics.CheckSphere(newPos, radius, layerMask)) break;
                 }
 
                 if (j >= maxIteration)

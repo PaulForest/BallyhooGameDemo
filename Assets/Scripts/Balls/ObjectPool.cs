@@ -7,21 +7,14 @@ namespace Balls
     public class ObjectPool<T> : MonoBehaviour
         where T : IPoolableObject, IResettableNonStaticData
     {
-        [SerializeField] protected int initialCount = 200;
-        [SerializeField] protected bool allowExpansion = true;
-        [SerializeField] protected GameObject prefab;
-
-        protected struct ObjectInstance
-        {
-            public T myComponent;
-            public GameObject gameObject;
-        }
-
-        public bool HasBallsInPlay => _numberOfNumberOfBallsInPlay > 0;
-
         private int _numberOfNumberOfBallsInPlay;
+        [SerializeField] protected bool allowExpansion = true;
+        [SerializeField] protected int initialCount = 200;
 
         protected List<ObjectInstance> pool = new List<ObjectInstance>();
+        [SerializeField] protected GameObject prefab;
+
+        public bool HasBallsInPlay => _numberOfNumberOfBallsInPlay > 0;
 
         protected virtual void Awake()
         {
@@ -44,7 +37,7 @@ namespace Balls
             var max = newMaxCapacity + min;
             for (var i = min; i < max; i++)
             {
-                var go = GameObject.Instantiate(prefab, transform, true);
+                var go = Instantiate(prefab, transform, true);
                 var t = go.GetComponent<T>();
                 if (null == t)
                 {
@@ -97,10 +90,7 @@ namespace Balls
                 return myInstance.myComponent;
             }
 
-            if (!allowExpansion)
-            {
-                return default;
-            }
+            if (!allowExpansion) return default;
 
             var newCapacity = currentPoolCount * 2;
             Debug.Log($"{this}.GetAvailableObject(): expanding capacity from {currentPoolCount} to {newCapacity}");
@@ -120,17 +110,18 @@ namespace Balls
             go.SetActive(false);
             _numberOfNumberOfBallsInPlay--;
 
-            if (_numberOfNumberOfBallsInPlay == 0)
-            {
-                GlobalEvents.LastBallDestroyed?.Invoke();
-            }
+            if (_numberOfNumberOfBallsInPlay == 0) GlobalEvents.LastBallDestroyed?.Invoke();
 
 #if UNITY_EDITOR
             if (!pool.Exists(instance => instance.gameObject == go))
-            {
                 Debug.LogError($"GameObject {go} wasn't contained in the pool");
-            }
 #endif
+        }
+
+        protected struct ObjectInstance
+        {
+            public T myComponent;
+            public GameObject gameObject;
         }
     }
 }

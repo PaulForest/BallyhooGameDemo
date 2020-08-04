@@ -5,19 +5,19 @@ namespace Balls
 {
     public class PlayerBallManager : MonoBehaviour
     {
+        private static PlayerBallManager _instance;
+
         public static PlayerBallManager Instance
         {
             get
             {
                 if (null != _instance) return _instance;
-                
+
                 var go = new GameObject("PlayerBallManager");
                 _instance = go.AddComponent<PlayerBallManager>();
                 return _instance;
             }
         }
-
-        private static PlayerBallManager _instance;
 
         private void Awake()
         {

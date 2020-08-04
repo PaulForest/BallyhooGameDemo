@@ -4,10 +4,9 @@ namespace PlayObjects
 {
     public class RotateMe : MonoBehaviour
     {
-        [SerializeField] private Vector3 rotationAxis = Vector3.forward;
-        [SerializeField] private float rotateRate = 0.1f;
-
         private Transform _myTransform;
+        [SerializeField] private float rotateRate = 0.1f;
+        [SerializeField] private Vector3 rotationAxis = Vector3.forward;
 
         public void Start()
         {

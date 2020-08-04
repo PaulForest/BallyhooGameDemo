@@ -5,7 +5,7 @@ namespace Util
     public static class PlatformNeutralInput
     {
 #if UNITY_EDITOR
-        private static Vector3 _oldMousePos = new Vector3();
+        private static Vector3 _oldMousePos;
 #endif
 
         public static void Reset()

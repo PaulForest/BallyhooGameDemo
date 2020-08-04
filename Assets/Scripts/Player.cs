@@ -4,13 +4,16 @@ using UnityEngine;
 public class Player
 {
     private const string LastLevelKey = "LastLevelPlayed";
+    private static Player _instance;
 
     public static Player Instance => _instance ?? (_instance = CreateNewOrGetExistingPlayer());
-    private static Player _instance;
 
     public LevelData LastLevelPlayed { get; set; }
 
-    private static bool IsNewPlayer() => PlayerPrefs.HasKey(LastLevelKey);
+    private static bool IsNewPlayer()
+    {
+        return PlayerPrefs.HasKey(LastLevelKey);
+    }
 
     private static Player CreateNewOrGetExistingPlayer()
     {
