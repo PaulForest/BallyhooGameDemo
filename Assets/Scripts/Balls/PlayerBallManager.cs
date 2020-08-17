@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace Balls
 {
+    /// <summary>
+    /// Handles events of interest to Player.  Specifically, when the level starts, reset the pool of balls.
+    /// Runs automatically, as long as <see cref="Instance"/> is referred before <see cref="GlobalEvents.LevelStart"/>
+    /// is dispatched.
+    /// </summary>
     public class PlayerBallManager : MonoBehaviour
     {
         private static PlayerBallManager _instance;

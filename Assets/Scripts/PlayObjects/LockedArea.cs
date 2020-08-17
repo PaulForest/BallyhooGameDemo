@@ -55,7 +55,7 @@ namespace PlayObjects
             var go = new GameObject("Explosion");
             BallSpawnPoint.AddNewInstance(go, go.transform.position, new CollideOnlyOnceData
                 {
-                    MyBitFieldMask = -1
+                    myBitFieldMask = -1
                 }, 100,
                 0.1f);
             Destroy(go, 2f);

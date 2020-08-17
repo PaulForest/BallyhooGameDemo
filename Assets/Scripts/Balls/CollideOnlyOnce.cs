@@ -7,7 +7,7 @@ namespace Balls
 {
     public struct CollideOnlyOnceData
     {
-        public int MyBitFieldMask;
+        public int myBitFieldMask;
     }
 
     /// <summary>
@@ -41,17 +41,17 @@ namespace Balls
         {
             try
             {
-                collideOnlyOnceData.MyBitFieldMask = BitVector32.CreateMask(BitMaskCollider.lastBitFieldMask);
+                collideOnlyOnceData.myBitFieldMask = BitVector32.CreateMask(BitMaskCollider.lastBitFieldMask);
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
                 Debug.LogError(
                     $"{this}.Start(): cannot use this bitmask: BitMaskCollider.lastBitFieldMask={BitMaskCollider.lastBitFieldMask}");
                 BitMaskCollider.lastBitFieldMask = 0;
-                collideOnlyOnceData.MyBitFieldMask = BitVector32.CreateMask(BitMaskCollider.lastBitFieldMask);
+                collideOnlyOnceData.myBitFieldMask = BitVector32.CreateMask(BitMaskCollider.lastBitFieldMask);
             }
 
-            BitMaskCollider.lastBitFieldMask = collideOnlyOnceData.MyBitFieldMask;
+            BitMaskCollider.lastBitFieldMask = collideOnlyOnceData.myBitFieldMask;
         }
 
         private void OnCollisionEnter(Collision other)
@@ -71,12 +71,12 @@ namespace Balls
 
         public bool CanCollideWithBall(TOnlyTouchOnce ball)
         {
-            return (ball.mInteractedWithBitField & collideOnlyOnceData.MyBitFieldMask) == 0;
+            return (ball.mInteractedWithBitField & collideOnlyOnceData.myBitFieldMask) == 0;
         }
 
         public void SetYouCannotCollideWithMeT(TOnlyTouchOnce ball)
         {
-            ball.mInteractedWithBitField |= collideOnlyOnceData.MyBitFieldMask;
+            ball.mInteractedWithBitField |= collideOnlyOnceData.myBitFieldMask;
         }
 
         public CollideOnlyOnceData GetData()

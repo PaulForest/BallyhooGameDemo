@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Balls
 {
-    public class BallPool : ObjectPool<PlayerBall>
+    public class BallPool : ObjectPool<NormalPoolableObject>
     {
         private static BallPool _instance;
 

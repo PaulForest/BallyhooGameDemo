@@ -37,7 +37,7 @@ namespace PlayObjects
 
         private void OnCollisionEvent(PlayerBall ball)
         {
-            if (!collideOnlyOnce.CanCollideWithBall(ball)) return;
+            if (!collideOnlyOnce.CanCollideWithBall(ball.MyCollideOnlyOncePlayerBall)) return;
 
             DoTheSplits(ball);
         }
@@ -50,10 +50,10 @@ namespace PlayObjects
         private void DoTheSplits(PlayerBall originalBall)
         {
             collideOnlyOnce.SetYouCannotCollideWithMeT(originalBall);
-            var bitField = originalBall.mInteractedWithBitField;
+            var bitField = originalBall.MyOnlyTouchOnce.mInteractedWithBitField;
 
             BallSpawnPoint.AddNewInstance(gameObject, transform.position,
-                new CollideOnlyOnceData {MyBitFieldMask = bitField},
+                new CollideOnlyOnceData {myBitFieldMask = bitField},
                 mSplitCount, originalBall.transform.localScale.x);
 
             GlobalEvents.BallSplitEvent?.Invoke(originalBall, this);

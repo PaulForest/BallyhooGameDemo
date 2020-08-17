@@ -1,6 +1,6 @@
 namespace Balls
 {
-    public interface IPoolableObject
+    public interface IPoolableObject : IResettableNonStaticData
     {
         void BeforeReset();
         void AfterReset();

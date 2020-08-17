@@ -1,6 +1,6 @@
 ﻿namespace Balls
 {
-    public class CollideOnlyOncePlayerBall : CollideOnlyOnce<PlayerBall, UnityPlayerBallEvent>
+    public class CollideOnlyOncePlayerBall : CollideOnlyOnce<OnlyTouchOnce, UnityPlayerBallEvent>
     {
     }
 }

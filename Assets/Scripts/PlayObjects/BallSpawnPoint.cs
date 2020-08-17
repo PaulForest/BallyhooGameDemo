@@ -68,8 +68,10 @@ namespace PlayObjects
                     newPos = transform.position;
                 }
 
+
                 newBall.transform.SetPositionAndRotation(newPos, Quaternion.identity);
-                newBall.UpdateCollideOnlyOnceDataFromExistingData(collideOnlyOnceData);
+                var onlyTouchOnce = newBall.GetComponent<OnlyTouchOnce>();
+                onlyTouchOnce.UpdateCollideOnlyOnceDataFromExistingData(collideOnlyOnceData);
             }
 
             if (spawnCount != 0) return;

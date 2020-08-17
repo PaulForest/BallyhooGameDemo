@@ -5,13 +5,13 @@ using UnityEngine;
 namespace Balls
 {
     public class ObjectPool<T> : MonoBehaviour
-        where T : IPoolableObject, IResettableNonStaticData
+        where T : IPoolableObject
     {
         private int _numberOfNumberOfBallsInPlay;
         [SerializeField] protected bool allowExpansion = true;
         [SerializeField] protected int initialCount = 200;
 
-        protected List<ObjectInstance> pool = new List<ObjectInstance>();
+        protected readonly List<ObjectInstance> pool = new List<ObjectInstance>();
         [SerializeField] protected GameObject prefab;
 
         public bool HasBallsInPlay => _numberOfNumberOfBallsInPlay > 0;

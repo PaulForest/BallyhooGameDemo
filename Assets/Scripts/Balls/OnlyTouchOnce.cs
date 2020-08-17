@@ -20,7 +20,7 @@ namespace Balls
             mInteractedWithBitField = 0;
         }
 
-        protected void ResetOnlyTouchOnceData()
+        public void ResetOnlyTouchOnceData()
         {
             mInteractedWithBitField = 0;
         }
@@ -29,13 +29,13 @@ namespace Balls
         {
             return new CollideOnlyOnceData
             {
-                MyBitFieldMask = mInteractedWithBitField
+                myBitFieldMask = mInteractedWithBitField
             };
         }
 
         public void UpdateCollideOnlyOnceDataFromExistingData(CollideOnlyOnceData collideOnlyOnceData)
         {
-            mInteractedWithBitField |= collideOnlyOnceData.MyBitFieldMask;
+            mInteractedWithBitField |= collideOnlyOnceData.myBitFieldMask;
         }
     }
 }
