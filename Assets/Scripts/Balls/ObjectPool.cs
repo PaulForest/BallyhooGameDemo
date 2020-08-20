@@ -1,40 +1,93 @@
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Balls
 {
+    /// <summary>
+    /// Maintains a generic collection of objects, utilizing object pooling.  That is, <see cref="initialCount"/>
+    /// instances are initially, created but marked as not enabled.  When instances are requested via
+    /// <see cref="GetAvailableObject"/>, a disabled instance is selected, <see cref="IPoolableObject.BeforeReset"/> is
+    /// called on that object, it's enabled, <see cref="IPoolableObject.AfterReset"/> is called, and the object is
+    /// returned.  Should there be insufficient objects available, more objects are created iff
+    /// <see cref="allowExpansion"/> is true, and one is returned, else null is returned.
+    /// <see cref="IPoolableObject"/>
+    /// <see cref="IResettableNonStaticData"/>
+    /// </summary>
     public class ObjectPool<T> : MonoBehaviour
         where T : IPoolableObject, IResettableNonStaticData
     {
-        private int _numberOfNumberOfBallsInPlay;
+        /// <summary>
+        /// Whether we'll add more objects to the collection if there are not enough instances when requesting an
+        /// instance.
+        /// </summary>
         [SerializeField] protected bool allowExpansion = true;
+
+        /// <summary>
+        /// The initial number of objects to allocate.
+        /// </summary>
         [SerializeField] protected int initialCount = 200;
 
-        protected List<ObjectInstance> pool = new List<ObjectInstance>();
+        /// <summary>
+        /// The objects themselves.
+        /// </summary>
+        protected readonly List<ObjectInstance> pool = new List<ObjectInstance>();
+
+        /// <summary>
+        /// The object to create.  Must be non-null.
+        /// </summary>
         [SerializeField] protected GameObject prefab;
 
-        public bool HasBallsInPlay => _numberOfNumberOfBallsInPlay > 0;
+        /// <summary>
+        /// Convenience method to get the number of active objects.  Note that this isn't the same as pool.Count, as not
+        /// all objects will be active.  This is a cheaper version of:
+        /// <code>pool.Count(instance => instance.gameObject.activeSelf) > 0;</code>,
+        /// although it does mean manually keeping track of <see cref="_numberOfNumberOfObjectsInPlay"/>.
+        /// </summary>
+        public bool HasObjectsInPlay => _numberOfNumberOfObjectsInPlay > 0;
+        private int _numberOfNumberOfObjectsInPlay;
 
         protected virtual void Awake()
         {
         }
 
+        /// <summary>
+        /// Initially create <see cref="initialCount"/> objects.
+        /// </summary>
         protected virtual void Start()
         {
+            if (null == prefab)
+            {
+                Debug.LogError($"{this} I need a prefab set", this);
+                Debug.DebugBreak();
+            }
+
             ExpandCapacity(initialCount);
         }
 
+        /// <summary>
+        /// Allocates enough new objects to allow <see cref="newMaxCapacity"/> objects.  Does nothing if
+        /// <see cref="newMaxCapacity"/> is less than or equal to the existing number of objects.
+        /// </summary>
+        /// <param name="newMaxCapacity"></param>
         private void ExpandCapacity(int newMaxCapacity)
         {
-            if (!prefab)
+            if (null == prefab)
             {
                 Debug.LogError($"{this} I need a prefab set", this);
                 return;
             }
 
             var min = pool.Count;
-            var max = newMaxCapacity + min;
+            var max = newMaxCapacity;
+
+            if (max <= min)
+            {
+                Debug.LogError($"invalid value for newMaxCapacity: {newMaxCapacity}", this);
+                return;
+            }
+
             for (var i = min; i < max; i++)
             {
                 var go = Instantiate(prefab, transform, true);
@@ -66,7 +119,7 @@ namespace Balls
                 instance.myComponent.AfterReset();
             }
 
-            _numberOfNumberOfBallsInPlay = 0;
+            _numberOfNumberOfObjectsInPlay = 0;
         }
 
 
@@ -85,7 +138,7 @@ namespace Balls
                 myInstance.gameObject.SetActive(true);
                 myInstance.myComponent.ResetNonStaticData();
 
-                _numberOfNumberOfBallsInPlay++;
+                _numberOfNumberOfObjectsInPlay++;
 
                 return myInstance.myComponent;
             }
@@ -100,7 +153,7 @@ namespace Balls
             myInstance.gameObject.SetActive(true);
             myInstance.myComponent.ResetNonStaticData();
 
-            _numberOfNumberOfBallsInPlay++;
+            _numberOfNumberOfObjectsInPlay++;
 
             return myInstance.myComponent;
         }
@@ -108,9 +161,9 @@ namespace Balls
         public virtual void ReturnObject(GameObject go)
         {
             go.SetActive(false);
-            _numberOfNumberOfBallsInPlay--;
+            _numberOfNumberOfObjectsInPlay--;
 
-            if (_numberOfNumberOfBallsInPlay == 0) GlobalEvents.LastBallDestroyed?.Invoke();
+            if (_numberOfNumberOfObjectsInPlay == 0) GlobalEvents.LastBallDestroyed?.Invoke();
 
 #if UNITY_EDITOR
             if (!pool.Exists(instance => instance.gameObject == go))
