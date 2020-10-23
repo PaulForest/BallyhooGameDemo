@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace PlayObjects
 {
-    public class BallSpawnPoint : MonoBehaviour
+    public class BallSpawnPoint : MonoBehaviour, IResettableNonStaticData
     {
         [SerializeField] public CollideOnlyOnceData collideOnlyOnceData;
 
@@ -73,7 +73,12 @@ namespace PlayObjects
             }
 
             if (spawnCount != 0) return;
-            Destroy(this);
+            enabled = false;
+        }
+
+        public void ResetNonStaticData()
+        {
+            enabled = true;
         }
     }
 }

@@ -43,6 +43,15 @@ namespace Level
             levelStartGo.SetActive(false);
         }
 
+        public void ClickRetryButton()
+        {
+            levelLostGo.SetActive(false);
+            CurrentState = CurrentStateEnum.LevelStart;
+            GlobalEvents.LevelStart?.Invoke(Player.Instance.LastLevelPlayed);
+
+            // levelStartGo.SetActive(true);
+        }
+
         public void ClickLevelWonButton()
         {
             GameController.Instance.StartNextLevel();

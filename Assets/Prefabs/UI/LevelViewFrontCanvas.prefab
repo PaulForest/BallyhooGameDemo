@@ -755,7 +755,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6343185839864659604}
-        m_MethodName: ClickLevelStartButton
+        m_MethodName: ClickRetryButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2189,10 +2189,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7f874902a1947bc912c915891d7d3ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelStartGo: {fileID: 5399268875625988458}
-  levelLostGo: {fileID: 8526641780063433944}
-  levelWonGo: {fileID: 6357526141657299251}
   backMenuGo: {fileID: 3884059370417276}
+  levelLostGo: {fileID: 8526641780063433944}
+  levelStartGo: {fileID: 5399268875625988458}
+  levelWonGo: {fileID: 6357526141657299251}
 --- !u!1 &6343185840152639421
 GameObject:
   m_ObjectHideFlags: 0
