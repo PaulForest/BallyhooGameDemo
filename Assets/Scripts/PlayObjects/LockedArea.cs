@@ -57,7 +57,8 @@ namespace PlayObjects
                 {
                     MyBitFieldMask = -1
                 }, 100,
-                0.1f);
+                0.1f,
+                BallSpawnPoint.SpawnBehaviour.SpawnImmediately);
             Destroy(go, 2f);
 
             Destroy(gameObject);

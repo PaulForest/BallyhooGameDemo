@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Level
 {
@@ -47,7 +48,12 @@ namespace Level
         {
             levelLostGo.SetActive(false);
             CurrentState = CurrentStateEnum.LevelStart;
-            GlobalEvents.LevelStart?.Invoke(Player.Instance.LastLevelPlayed);
+
+            int buildIndex = SceneManager.GetActiveScene().buildIndex;
+
+            SceneManager.LoadScene(buildIndex);
+
+            // GlobalEvents.LevelStart?.Invoke(Player.Instance.LastLevelPlayed);
 
             // levelStartGo.SetActive(true);
         }

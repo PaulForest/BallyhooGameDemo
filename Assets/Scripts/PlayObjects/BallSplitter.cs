@@ -54,7 +54,7 @@ namespace PlayObjects
 
             BallSpawnPoint.AddNewInstance(gameObject, transform.position,
                 new CollideOnlyOnceData {MyBitFieldMask = bitField},
-                mSplitCount, originalBall.transform.localScale.x);
+                mSplitCount, originalBall.transform.localScale.x, BallSpawnPoint.SpawnBehaviour.SpawnImmediately);
 
             GlobalEvents.BallSplitEvent?.Invoke(originalBall, this);
         }

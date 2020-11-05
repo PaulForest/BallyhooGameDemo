@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6852825759320341964}
   - component: {fileID: 6852825759320341965}
-  - component: {fileID: 1359237377}
   m_Layer: 0
   m_Name: BallSpawnPoint
   m_TagString: Untagged
@@ -45,17 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxBallsToGeneratePerFrame: 5
-  spawnCount: 1
   radius: 0.1
---- !u!114 &1359237377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6852825759320341966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2a682b030f7424d8db0ea7a9f14d303, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  spawnCount: 1
+  spawnBehaviour: 1

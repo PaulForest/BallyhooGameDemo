@@ -21916,6 +21916,11 @@ PrefabInstance:
       propertyPath: maxBallsToGeneratePerFrame
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6852825759320341965, guid: e8ad41953ab22a3418cffe6a506f380a,
+        type: 3}
+      propertyPath: spawnBehaviour
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6852825759320341966, guid: e8ad41953ab22a3418cffe6a506f380a,
         type: 3}
       propertyPath: m_Name
